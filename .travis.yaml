@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.4"
+# command to install dependencies
+install: 
+  - pip install .
+  - pip install simpy
+# command to run tests
+script:
+  - examples/simple.py
