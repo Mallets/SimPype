@@ -8,7 +8,7 @@ sim = simpype.Simulation(id = 'supermarket')
 sim.seed = 42
 # [Optional] Configure the path containting the models for the simulation. 
 # [Default] Current working directory
-sim.model.dir = 'model'
+sim.model.dir = 'examples/model'
 
 # Create a generator
 gen0 = sim.add_generator(id = 'gen')
