@@ -7,5 +7,7 @@ install:
   - pip install codecov
 script:
   - coverage run examples/simple.py
+  - coverage run examples/splitter.py
+  - coverage run examples/supermarket.py
 after_success:
   - codecov

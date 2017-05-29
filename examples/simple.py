@@ -9,9 +9,6 @@ sim.seed = 42
 # [Optional] Configure the log directory. 
 # [Default] Current working directory/log
 sim.log.dir = 'mylog'
-# [Optional] Configure the path containting the models for the simulation. 
-# [Default] Current working directory
-sim.model.dir = 'mymodel'
 
 # Create a generator
 gen0 = sim.add_generator(id = 'gen')

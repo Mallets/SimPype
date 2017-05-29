@@ -98,9 +98,9 @@ class Message:
 	def __setattr__(self, name, value):
 		if name == 'next':
 			if isinstance(value, simpype.resource.Resource):
-				value = {value.pipe.resource.id: value.pipe}
+				value = {value.id: value}
 			elif isinstance(value, simpype.pipeline.Pipeline):
-				value = {value.first.resource.id: value.first}
+				value = {value.first.id: value.first}
 		elif name == 'pipeline':
 			assert isinstance(value, simpype.pipeline.Pipeline)
 		elif name == 'queue':

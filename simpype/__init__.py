@@ -53,4 +53,4 @@ if __doc__:
 __all__ = [obj.__name__ for section, objs in toc for obj in objs]
 
 __path__ = extend_path(__path__, __name__)
-__version__ = '1.0.0.dev1'
+__version__ = '0.0.1.dev2'
