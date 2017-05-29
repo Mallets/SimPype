@@ -1,5 +1,6 @@
 import inspect
 import simpy
+import types
 
 import simpype.build
 import simpype.message
@@ -7,29 +8,42 @@ import simpype.random
 import simpype.simulation
 
 
-def service(f):
-	def wrapper(resource, message):
-		assert isinstance(resource, Resource)
-		assert isinstance(message, simpype.message.Message)
-		if inspect.isgeneratorfunction(f):
-			mid = str(message.id)+str(message.seq_num)
-			tmp = f(resource, message)
-			a_serve = resource.env.process(f(resource, message))
-			resource.task[mid] = Task(message.sim, message, a_serve)
-			try:
-				yield a_serve
-				message.timestamp('resource.serve')
-			except simpy.Interrupt as interrupt:
-				message.timestamp('resource.'+str(interrupt.cause))
-			del resource.task[mid]
-		else:
-			f(resource, message)
+def __service(func, resource, message):
+	assert isinstance(resource, Resource)
+	assert isinstance(message, simpype.message.Message)
+	if inspect.isgeneratorfunction(func):
+		mid = str(message.id)+str(message.seq_num)
+		a_serve = resource.env.process(func(resource, message))
+		resource.task[mid] = Task(message.sim, message, a_serve)
+		try:
+			yield a_serve
 			message.timestamp('resource.serve')
-		if message.next:
-			resource.send(message)
-		else:
-			message.done()
-	return wrapper
+		except simpy.Interrupt as interrupt:
+			message.timestamp('resource.'+str(interrupt.cause))
+		del resource.task[mid]
+	else:
+		func(resource, message)
+		message.timestamp('resource.serve')
+	if message.next:
+		resource.send(message)
+	else:
+		message.done()
+
+
+def service(arg):
+	if isinstance(arg, simpype.resource.Resource):
+		resource = arg
+		def decorator(func):
+			def wrapper(resource, message):
+				return __service(func, resource, message)
+			resource.service = types.MethodType(wrapper, resource)
+			return wrapper
+		return decorator
+	else:
+		func = arg
+		def wrapper(resource, message):
+			return __service(func, resource, message)
+		return wrapper
 
 
 class Task:

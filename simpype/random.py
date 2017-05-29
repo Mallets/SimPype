@@ -26,7 +26,7 @@ class Random:
 
 	@property
 	def value(self):
-		while self.step_list[0].tto < self.env.now:
+		while self.step_list[0].tto <= self.env.now:
 			self.step_list.pop(0)
 		return self.step_list[0].process()
 

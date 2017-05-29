@@ -3,28 +3,53 @@ import simpype.pipe
 import simpype.simulation
 
 
-# Queue decorator
-def push(f):
-	def wrapper(queue, message):
-		assert isinstance(queue, Queue)
-		assert isinstance(message, simpype.message.Message)
-		message.queue = queue
-		message.timestamp('pipe.'+str(queue.id)+'.in')
-		result = f(queue, message)
-		if isinstance(result, simpype.message.Message) and queue.active.triggered:
-			queue.pipe.full()
-		return result
-	return wrapper
+def __push(func, queue, message):
+	assert isinstance(queue, Queue)
+	assert isinstance(message, simpype.message.Message)
+	message.queue = queue
+	message.timestamp('pipe.'+str(queue.id)+'.in')
+	result = func(queue, message)
+	if isinstance(result, simpype.message.Message) and queue.active.triggered:
+		queue.pipe.full()
+	return result
 
-def pop(f):
-	def wrapper(queue):
-		assert isinstance(queue, Queue)
-		message = f(queue)
-		if isinstance(message, simpype.message.Message):
-			message.timestamp('pipe.'+str(queue.id)+'.out')
-			message.queue = None
-		return message
-	return wrapper
+def __pop(func, queue):
+	assert isinstance(queue, Queue)
+	message = func(queue)
+	if isinstance(message, simpype.message.Message):
+		message.timestamp('pipe.'+str(queue.id)+'.out')
+		message.queue = None
+	return message
+
+def push(arg):
+	if isinstance(arg, simpype.queue.Queue):
+		queue = arg
+		def decorator(func):
+			def wrapper(queue, message):
+				return __push(func, queue, message)
+			queue.push = types.MethodType(wrapper, queue)
+			return wrapper
+		return decorator
+	else:
+		func = arg
+		def wrapper(queue, message):
+			return __push(func, queue, message)
+		return wrapper
+
+def pop(arg):
+	if isinstance(arg, simpype.queue.Queue):
+		queue = arg
+		def decorator(func):
+			def wrapper(queue):
+				return __pop(func, queue)
+			queue.pop = types.MethodType(wrapper, queue)
+			return wrapper
+		return decorator
+	else:
+		func = arg
+		def wrapper(queue):
+			return __pop(func, queue)
+		return wrapper
 
 
 class Queue:

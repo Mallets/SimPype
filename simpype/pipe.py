@@ -6,30 +6,54 @@ import simpype.resource
 import simpype.simulation
 
 
-# Pipe decorator
-def enqueue(f):
-	def wrapper(pipe, message):
-		assert isinstance(pipe, Pipe)
-		assert isinstance(message, simpype.message.Message)
-		message.resource = pipe.resource
-		if inspect.isgeneratorfunction(f):
-			result = yield pipe.env.process(f(pipe, message))
-		else:
-			result = f(pipe, message)
-		pipe.full()
-		return result
-	return wrapper
+def __enqueue(func, pipe, message):
+	assert isinstance(pipe, Pipe)
+	assert isinstance(message, simpype.message.Message)
+	message.resource = pipe.resource
+	if inspect.isgeneratorfunction(func):
+		result = yield pipe.env.process(func(pipe, message))
+	else:
+		result = func(pipe, message)
+	pipe.full()
+	return result
 
+def __dequeue(func, pipe):
+	assert isinstance(pipe, Pipe)
+	if inspect.isgeneratorfunction(func):
+		result = yield pipe.env.process(func(pipe))
+	else:
+		result = func(pipe)
+	return result
 
-def dequeue(f):
-	def wrapper(pipe):
-		assert isinstance(pipe, Pipe)
-		if inspect.isgeneratorfunction(f):
-			result = yield pipe.env.process(f(pipe))
-		else:
-			result = f(pipe)
-		return result
-	return wrapper
+def enqueue(arg):
+	if isinstance(arg, simpype.pipe.Pipe):
+		pipe = arg
+		def decorator(func):
+			def wrapper(pipe, message):
+				return __enqueue(func, pipe, message)
+			pipe.enqueue = types.MethodType(wrapper, pipe)
+			return wrapper
+		return decorator
+	else:
+		func = arg
+		def wrapper(pipe, message):
+			return __enqueue(func, pipe, message)
+		return wrapper
+
+def dequeue(arg):
+	if isinstance(arg, simpype.pipe.Pipe):
+		pipe = arg
+		def decorator(func):
+			def wrapper(pipe):
+				return __dequeue(func, pipe)
+			pipe.dequeue = types.MethodType(wrapper, pipe)
+			return wrapper
+		return decorator
+	else:
+		func = arg
+		def wrapper(pipe):
+			return __dequeue(func, pipe)
+		return wrapper
 
 
 class Pipe:

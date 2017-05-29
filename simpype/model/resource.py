@@ -6,7 +6,7 @@ class Resource(simpype.resource.Resource):
 		super().__init__(sim, id, capacity)
 		self.random['service'] = {0: lambda: 0}
 	
-	@simpype.resource.service	
+	@simpype.resource.service
 	def service(self, message):
 		yield self.env.timeout(self.random['service'].value)
 

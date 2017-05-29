@@ -35,6 +35,7 @@ class Log:
 		self.sim = sim
 		self.env = sim.env
 		self.date = datetime.datetime.now()
+		self.dir = os.path.join(os.getcwd(), 'log')
 		self._h_fixed = ["timestamp", "message", "seq_num", "resource", "event"]
 		self._h_property = []
 		self._first = True
@@ -46,8 +47,6 @@ class Log:
 	@dir.setter
 	def dir(self, val):
 		self._dir = functools.reduce(os.path.join,[val, self.sim.id, str(self.date)])
-		self._log = simpype.build.logger('log', os.path.join(self.dir, 'sim.log'))
-		self._cfg = simpype.build.logger('cfg', os.path.join(self.dir, 'sim.cfg')) 
 
 	def _write_log(self, timestamp):
 		assert isinstance(timestamp, simpype.message.Timestamp)
@@ -65,6 +64,12 @@ class Log:
 	def _write_cfg(self, entry):
 		self._cfg.info(str(entry))
 
+	def init(self):
+		if not os.path.exists(self.dir):
+			os.makedirs(self.dir)
+		self._log = simpype.build.logger('log', os.path.join(self.dir, 'sim.log'))
+		self._cfg = simpype.build.logger('cfg', os.path.join(self.dir, 'sim.cfg')) 
+
 	def write(self, entry):
 		if isinstance(entry, simpype.message.Timestamp):
 			self._write_log(entry)
@@ -77,6 +82,7 @@ class Log:
 
 class Simulation:
 	def __init__(self, id):
+		assert isinstance(id, str)
 		self.env = simpy.Environment()
 		self.id = id
 		self.resource = {}
@@ -137,10 +143,7 @@ class Simulation:
 		return pipeline
 
 	def run(self, *args, **kwargs):
-		if not hasattr(self.log, '_dir'):
-			self.log.dir = 'log'
-		if not os.path.exists(self.log.dir):
-			os.makedirs(self.log.dir)
+		self.log.init()
 		sptime = time.process_time()
 		self.env.run(*args, **kwargs)
 		eptime = time.process_time()
