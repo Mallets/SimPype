@@ -14,7 +14,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.0.0.dev1',
+    version='0.0.1.dev2',
     description='SimPype is a simulation framework based on Simpy that relies on the concepts of resource and pipe.',
     long_description=long_description,
     # The project's main homepage.
@@ -40,10 +40,11 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: 3.4',
     ],
+	python_requires='>=3.4',
     keywords='simulation queue pipe simpy',
-	packages=['simpype'],
+	packages=['simpype', 'simpype.model'],
     install_requires=['simpy>=3.0.10'],
 )
