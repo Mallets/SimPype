@@ -7,4 +7,4 @@ install:
   - pip install simpy
 # command to run tests
 script:
-  - examples/simple.py
+  - python3 examples/simple.py
