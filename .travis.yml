@@ -6,6 +6,6 @@ install:
   - pip install simpy
   - pip install codecov
 script:
-  - coverage run python3 examples/simple.py
+  - coverage run examples/simple.py
 after_success:
   - codecov
