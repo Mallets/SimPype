@@ -21,7 +21,7 @@ gen0.message.property['items'] = {0: lambda: random.randint(1,10)}
 sim.log.property('items')
 
 # Add a resource
-cashier = sim.add_resource(id = 'cashier', model = 'cashier')
+cashier = sim.add_resource(id = 'cashier', model = 'r_cashier')
 
 # Add a pipiline connecting the generator to the resource
 p0 = sim.add_pipeline(gen0, cashier)
