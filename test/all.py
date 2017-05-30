@@ -261,5 +261,12 @@ def pop(self):
 	else:
 		return None
 
+# Gen17 -> Res17
+gen17 = sim.add_generator(id = 'gen17')
+gen17.random['arrival'] = {0: lambda: 1.0}
+res17 = sim.add_resource(id = 'res17', pipe = 'p_wfq')
+res17.random['service'] = {0: lambda: 1.0}
+p17 = sim.add_pipeline(gen17, res17)
+
 ## Run until t=60
 sim.run(until = 60)

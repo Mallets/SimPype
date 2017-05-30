@@ -84,7 +84,7 @@ class Wfq(simpype.Pipe):
 	@classes.setter
 	def classes(self, value):
 		for i in range(len(self.queue), value):
-			q = self.add_queue(id = i, model = 'wfq')
+			q = self.add_queue(id = i, model = 'p_wfq')
 		self._set_queue_param()
 
 	def _set_queue_param(self):
