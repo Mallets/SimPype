@@ -18,6 +18,11 @@ gen0.random['arrival'] = simpype.random.Random(sim, {
 	10	: lambda: random.uniform(0.5, 1.5),
 	20	: lambda: random.expovariate(1.0)
 })
+gen0.message.property['lifetime'] = {
+	0	: lambda: 1.0,
+	10	: lambda: random.uniform(0.5, 1.5),
+	20	: lambda: random.expovariate(1.0)
+}
 gen0.message.property['items'] = {
 	0	: lambda: random.randint(0, 10),
 }
@@ -120,20 +125,6 @@ def dequeue(self):
 		message.timestamp('pipe.dequeue.test')
 	return message
 
-@simpype.queue.push(res2.pipe.queue['default'])
-def push(self, message):
-	self.buffer.append(message)
-	message.timestamp('queue.push.test')
-
-@simpype.queue.pop(res2.pipe.queue['default'])
-def pop(self):
-	if len(self.buffer) > 0:
-		message = self.buffer.pop(0)
-		message.timestamp('queue.push.test')
-		return message
-	else:
-		return None
-
 @simpype.resource.service(res3)
 def service(self, message):
 	global e
@@ -171,6 +162,20 @@ def service(self, message):
 	message.subscribe(callback = fcallback, event = e, id = 'event')
 	if 'lifetime' in message.property:
 		message.unsubscribe('lifetime')
+
+@simpype.queue.push(res7.pipe.queue['default'])
+def push(self, message):
+	self.buffer.append(message)
+	message.timestamp('queue.push.test')
+
+@simpype.queue.pop(res7.pipe.queue['default'])
+def pop(self):
+	if len(self.buffer) > 0:
+		message = self.buffer.pop(0)
+		message.timestamp('queue.push.test')
+		return message
+	else:
+		return None
 
 # Run until t=60
 sim.run(until = 60)

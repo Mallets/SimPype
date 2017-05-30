@@ -32,10 +32,7 @@ class PriorityPreemption(simpype.Pipe):
 		else:
 			m = self.queue['slow'].push(message)
 
-		if not isinstance(m, simpype.message.Message):
-			return m
-
-		if len(self.queue['express']) > 0:
+		if isinstance(m, simpype.message.Message) and len(self.queue['express']) > 0:
 			tlist = [t for t in self.resource.task.values() if message.property['priority'].value != 0]
 			if len(tlist) > 0:
 				task = max(tlist, key = lambda task: task.message.property['priority'].value)
