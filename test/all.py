@@ -238,7 +238,7 @@ res16 = sim.add_resource(id = 'res16')
 res16.random['service'] = {0: lambda: 1.0}
 p16 = sim.add_pipeline(gen16, res16)
 
-@simpype.pipe.dequeue(res16.pipe.queue['default'])
+@simpype.pipe.dequeue(res16.pipe)
 def dequeue(self):
 	message = self.queue['default'].pop()
 	message = self.queue['default'].pop()
@@ -246,8 +246,11 @@ def dequeue(self):
 
 @simpype.queue.push(res16.pipe.queue['default'])
 def push(self, message):
+	self.disable()
 	self.buffer.append(message)
 	message.timestamp('queue.push.test')
+	self.enable()
+	return message
 
 @simpype.queue.pop(res16.pipe.queue['default'])
 def pop(self):
@@ -257,6 +260,6 @@ def pop(self):
 		return message
 	else:
 		return None
-#
+
 ## Run until t=60
 sim.run(until = 60)
