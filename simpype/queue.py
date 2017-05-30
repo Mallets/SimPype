@@ -6,7 +6,7 @@ import simpype
 def __push(func, queue, message):
 	assert isinstance(queue, simpype.Queue)
 	assert isinstance(message, simpype.Message)
-	message.queue = queue
+	message.location = queue
 	message.timestamp('pipe.'+str(queue.id)+'.in')
 	result = func(queue, message)
 	if isinstance(result, simpype.Message) and queue.active.triggered:
@@ -66,7 +66,7 @@ class Queue:
 
 	def _message_dropped(self, message, cause):
 		assert isinstance(message, simpype.Message)
-		assert message.queue == self
+		assert message.location == self
 		if message in self.buffer:
 			self.buffer.remove(message)
 		message.timestamp('pipe.'+str(self.id)+'.'+str(cause))

@@ -9,6 +9,7 @@ import simpype.build
 def __enqueue(func, pipe, message):
 	assert isinstance(pipe, Pipe)
 	assert isinstance(message, simpype.Message)
+	message.location = pipe
 	message.resource = pipe.resource
 	if inspect.isgeneratorfunction(func):
 		result = yield pipe.env.process(func(pipe, message))
@@ -68,6 +69,10 @@ class Pipe:
 		self.queue = {}
 		# Init
 		self.a_wait_loop = self.env.process(self._wait_loop())
+
+	def _message_dropped(self, message, cause):
+		assert isinstance(message, simpype.Message)
+		assert message.location == self
 
 	def _wait_loop(self):
 		while True:

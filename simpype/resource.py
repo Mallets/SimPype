@@ -9,6 +9,7 @@ import simpype.build
 def __service(func, resource, message):
 	assert isinstance(resource, Resource)
 	assert isinstance(message, simpype.Message)
+	message.location = resource
 	if inspect.isgeneratorfunction(func):
 		mid = str(message.id)+str(message.seq_num)
 		a_serve = resource.env.process(func(resource, message))
@@ -55,8 +56,9 @@ class Task:
 		self._process = process
 
 	def interrupt(self, cause = None):
-		self._process.interrupt(cause = cause)
-		self.interrupted = self.env.now
+		if self._process.is_alive:
+			self._process.interrupt(cause = cause)
+			self.interrupted = self.env.now
 
 
 class Resource:
@@ -71,6 +73,8 @@ class Resource:
 		self.task = {}
 
 	def _message_dropped(self, message, cause):
+		assert isinstance(message, simpype.Message)
+		assert message.location == self
 		mid = message.id+str(message.seq_num)
 		assert mid in self.task
 		self.task[mid].interrupt(cause = cause)

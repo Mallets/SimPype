@@ -86,7 +86,7 @@ class Message:
 		self.resource = resource
 		self.pipeline = simpype.Pipeline(self.sim, self.id)
 		self.property = PropertyDict(self.sim)
-		self.queue = None
+		self.location = resource
 		self.seq_num = 0
 		self.subscription = {}
 
@@ -129,10 +129,7 @@ class Message:
 
 	def _drop(self, message, cause):
 		self.done()
-		if self.queue is None:
-			self.resource._message_dropped(self, cause)
-		else:
-			self.queue._message_dropped(self, cause)
+		self.location._message_dropped(self, cause)
 
 	def _update_next(self):
 		if self.resource.id in self.pipeline.resource:
@@ -151,7 +148,7 @@ class Message:
 		message = Message(self.sim, self.generator, self.id)
 		message.generated = copy.deepcopy(self.generated)
 		message.resource = self.resource
-		message.queue = self.queue
+		message.location = self.location
 		message.seq_num = copy.deepcopy(self.seq_num)
 		message.visited = copy.copy(self.visited)
 		message.is_alive = copy.deepcopy(self.is_alive)
