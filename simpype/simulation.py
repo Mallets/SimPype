@@ -55,7 +55,9 @@ class Log:
 		s = "%.9f" % timestamp.timestamp + "," + timestamp.message.id + "," + \
 			str(timestamp.message.seq_num) + "," + timestamp.resource.id + "," + timestamp.event 
 		for h in self._h_property:
-			p = timestamp.message.property[h] if h in timestamp.message.property else 'NA'
+			if h not in timestamp.message.property:
+				timestamp.message.property[h] = 'NA'
+			p = timestamp.message.property[h]
 			p = "%.9f" % p if isinstance(p, float) else str(p.value)
 			s = s + "," + p
 		self._log.info(s)
