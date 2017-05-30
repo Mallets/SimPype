@@ -58,7 +58,7 @@ class Timestamp:
 
 
 class Subscription:
-	def __init__(self, sim, message, event, callback):
+	def __init__(self, sim, message, event, callback, id):
 		assert isinstance(sim, simpype.Simulation)
 		assert isinstance(message, Message)
 		assert callable(callback)
@@ -67,6 +67,7 @@ class Subscription:
 		self.message = message
 		self.event = event
 		self.callback = callback
+		self.id = id
 		self.disable = self.env.event()
 
 
@@ -143,6 +144,8 @@ class Message:
 		value = yield subscription.event | subscription.disable
 		if subscription.event in value and self.is_alive:
 			subscription.callback(self, value[subscription.event])
+		if subscription.id in self.subscription:
+			del self.subscription[subscription.id]
 	
 	def copy(self):
 		message = Message(self.sim, self.generator, self.id)
@@ -174,18 +177,13 @@ class Message:
 		else:
 			e = self.subscribe(event = event, callback = self._drop, id = id)
 
-	def subscribe(self, callback, event, id = None):
+	def subscribe(self, event, callback, id):
 		assert callable(callback)
-		if event in self.subscription:
-			self.unsubscribe(event)
-		elif id in self.subscription:
+		if id in self.subscription:
 			self.unsubscribe(id)
-		s = Subscription(self.sim, self, event, callback)
+		s = Subscription(self.sim, self, event, callback, id)
+		self.subscription[id] = s
 		self.env.process(self._wait_event(s))
-		if id is None:
-			self.subscription[event] = s
-		else:
-			self.subscription[id] = s
 		return s
 
 	def timestamp(self, event):
@@ -193,7 +191,6 @@ class Message:
 		self.sim.log.write(ts)
 		return ts
 
-	def unsubscribe(self, subscription):
-		assert subscription in self.subscription
-		self.subscription[subscription].disable.succeed()
-		del self.subscription[subscription]
+	def unsubscribe(self, id):
+		assert id in self.subscription
+		self.subscription[id].disable.succeed()

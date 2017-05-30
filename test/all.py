@@ -112,7 +112,6 @@ gen10 = sim.add_generator(id = 'gen10')
 gen10.random['arrival'] = {0: lambda: 1.0}
 res10a = sim.add_resource(id = 'res10a')
 res10b = sim.add_resource(id = 'res10b')
-res10b.random['service'] = {0: lambda: 1.0}
 res10c = sim.add_resource(id = 'res10c')
 p10 = sim.add_pipeline(gen10, res10a, res10b, res10c)
 
@@ -124,19 +123,20 @@ def fcallback(message, value):
 @simpype.resource.service(res10a)
 def service(self, message):
 	global e
-	message.subscribe(callback = fcallback, event = e)
-	message.subscribe(callback = fcallback, event = e)
-	message.subscribe(callback = fcallback, event = e, id = 'event')
-	message.subscribe(callback = fcallback, event = e, id = 'event')
+	message.subscribe(event = e, callback = fcallback, id = 'event')
+	yield sim.env.timeout(1.0)
+
+@simpype.resource.service(res10b)
+def service(self, message):
+	global e
+	message.subscribe(event = e, callback = fcallback, id = 'event')
 	yield sim.env.timeout(1.0)
 
 @simpype.resource.service(res10c)
 def service(self, message):
 	global e
 	if 'event' in message.subscription:
-		message.unsubscribe('event')
-	if e in message.subscription:
-		message.unsubscribe(e)
+		message.unsubscribe(id = 'event')
 	yield sim.env.timeout(1.0)
 
 def clock():
