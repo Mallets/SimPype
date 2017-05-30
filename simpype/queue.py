@@ -1,11 +1,13 @@
+import types
+
 import simpype.message
 import simpype.pipe
 import simpype.simulation
 
 
 def __push(func, queue, message):
-	assert isinstance(queue, Queue)
-	assert isinstance(message, simpype.message.Message)
+	assert isinstance(queue, simpype.Queue)
+	assert isinstance(message, simpype.Message)
 	message.queue = queue
 	message.timestamp('pipe.'+str(queue.id)+'.in')
 	result = func(queue, message)
@@ -16,13 +18,13 @@ def __push(func, queue, message):
 def __pop(func, queue):
 	assert isinstance(queue, Queue)
 	message = func(queue)
-	if isinstance(message, simpype.message.Message):
+	if isinstance(message, simpype.Message):
 		message.timestamp('pipe.'+str(queue.id)+'.out')
 		message.queue = None
 	return message
 
 def push(arg):
-	if isinstance(arg, simpype.queue.Queue):
+	if isinstance(arg, simpype.Queue):
 		queue = arg
 		def decorator(func):
 			def wrapper(queue, message):
@@ -37,7 +39,7 @@ def push(arg):
 		return wrapper
 
 def pop(arg):
-	if isinstance(arg, simpype.queue.Queue):
+	if isinstance(arg, simpype.Queue):
 		queue = arg
 		def decorator(func):
 			def wrapper(queue):
@@ -54,8 +56,8 @@ def pop(arg):
 
 class Queue:
 	def __init__(self, sim, pipe, id):
-		assert isinstance(sim, simpype.simulation.Simulation)
-		assert isinstance(pipe, simpype.pipe.Pipe)
+		assert isinstance(sim, simpype.Simulation)
+		assert isinstance(pipe, simpype.Pipe)
 		self.sim = sim
 		self.env = sim.env
 		self.id = id
@@ -65,7 +67,7 @@ class Queue:
 		self.active = self.env.event().succeed()
 
 	def _message_dropped(self, message, cause):
-		assert isinstance(message, simpype.message.Message)
+		assert isinstance(message, simpype.Message)
 		assert message.queue == self
 		if message in self.buffer:
 			self.buffer.remove(message)

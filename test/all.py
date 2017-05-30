@@ -95,11 +95,13 @@ def fcallback(message, value):
 res1.pipe.debug = True
 @simpype.pipe.enqueue(res1.pipe)
 def enqueue(self, message):
+	self.queue['default'].disable()
 	yield self.env.timeout(0)
 	message.timestamp('pipe.enqueue.test')
 	message = self.queue['default'].push(message)
 	if message.seq_num % 10 == 0:
 		message.drop('badluck')
+	self.queue['default'].enable()
 	return message
 
 @simpype.pipe.dequeue(res1.pipe)
@@ -109,6 +111,20 @@ def dequeue(self):
 	if isinstance(message, simpype.Message):
 		message.timestamp('pipe.dequeue.test')
 	return message
+
+@simpype.queue.push(res2.pipe.queue['default'])
+def push(self, message):
+	self.buffer.append(message)
+	message.timestamp('queue.push.test')
+
+@simpype.queue.pop(res2.pipe.queue['default'])
+def pop(self):
+	if len(self.buffer) > 0:
+		message = self.buffer.pop(0)
+		message.timestamp('queue.push.test')
+		return message
+	else:
+		return None
 
 @simpype.resource.service(res3)
 def service(self, message):

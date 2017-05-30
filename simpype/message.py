@@ -173,7 +173,7 @@ class Message:
 		s = Subscription(self.sim, self, event, callback)
 		self.env.process(self._wait_event(s))
 		if id is None:
-			self.subscription[s] = s
+			self.subscription[event] = s
 		else:
 			self.subscription[id] = s
 		return s
