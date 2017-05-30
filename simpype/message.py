@@ -168,6 +168,8 @@ class Message:
 		assert callable(callback)
 		if event in self.subscription:
 			self.unsubscribe(event)
+		elif id in self.subscription:
+			self.unsubscribe(id)
 		s = Subscription(self.sim, self, event, callback)
 		self.env.process(self._wait_event(s))
 		if id is None:

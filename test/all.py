@@ -88,6 +88,9 @@ def fcallback(message, value):
 	global e
 	message.timestamp('callback')	
 	message.subscribe(callback = fcallback, event = e)
+	message.subscribe(callback = fcallback, event = e)
+	message.subscribe(callback = fcallback, event = e, id = 'event')
+	message.subscribe(callback = fcallback, event = e, id = 'event')
 
 res1.pipe.debug = True
 @simpype.pipe.enqueue(res1.pipe)
@@ -95,6 +98,8 @@ def enqueue(self, message):
 	yield self.env.timeout(0)
 	message.timestamp('pipe.enqueue.test')
 	message = self.queue['default'].push(message)
+	if message.seq_num % 10 == 0:
+		message.drop('badluck')
 	return message
 
 @simpype.pipe.dequeue(res1.pipe)
@@ -108,8 +113,12 @@ def dequeue(self):
 @simpype.resource.service(res3)
 def service(self, message):
 	global e
+	message.subscribe(callback = fcallback, event = e)
+	message.subscribe(callback = fcallback, event = e)
 	message.subscribe(callback = fcallback, event = e, id = 'event')
 	message.subscribe(callback = fcallback, event = e, id = 'event')
+	if message.seq_num % 10 == 0:
+		message.drop('badluck')
 
 @simpype.resource.service(res5)
 def service(self, message):
@@ -140,8 +149,6 @@ def service(self, message):
 	message.subscribe(callback = fcallback, event = e, id = 'event')
 	if 'lifetime' in message.property:
 		message.unsubscribe('lifetime')
-	if message.seq_num % 10 == 0:
-		message.drop('badluck')
 
 # Run until t=30
 sim.run(until = 30)
