@@ -6,8 +6,9 @@ install:
   - pip install simpy
   - pip install codecov
 script:
-  - coverage run examples/simple.py
-  - coverage run examples/splitter.py
-  - coverage run examples/supermarket.py
+  - python3 examples/simple.py
+  - python3 examples/splitter.py
+  - python3 examples/supermarket.py
+  - coverage run test/all.py
 after_success:
   - codecov

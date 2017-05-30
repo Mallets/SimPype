@@ -130,16 +130,9 @@ class Message:
 			self.next = {}
 
 	def _wait_event(self, subscription):
-		active = True
-		while active:
-			e = subscription.event
-			value = yield e | subscription.disable
-			if e in value and self.is_alive:
-				subscription.callback(self, value[e])
-			else:
-				active = False
-			if isinstance(e, simpy.events.Timeout):
-				active = False
+		value = yield subscription.event | subscription.disable
+		if subscription.event in value and self.is_alive:
+			subscription.callback(self, value[subscription.event])
 	
 	def copy(self):
 		message = Message(self.sim, self.generator, self.id)
