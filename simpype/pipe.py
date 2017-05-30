@@ -1,5 +1,6 @@
 import inspect
 import simpy
+import types
 
 import simpype.build
 import simpype.resource
@@ -85,6 +86,6 @@ class Pipe:
 		return self.queue[queue.id]
 
 	def full(self):
-		if not self.available.triggered and \
-		sum([len(q) for q in self.queue.values() if q.active.triggered]) > 0:
+		tot = sum([len(q) for q in self.queue.values() if q.active.triggered])
+		if not self.available.triggered and tot > 0:
 			self.available.succeed()
