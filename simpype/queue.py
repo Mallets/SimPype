@@ -1,8 +1,6 @@
 import types
 
-import simpype.message
-import simpype.pipe
-import simpype.simulation
+import simpype
 
 
 def __push(func, queue, message):
@@ -11,7 +9,7 @@ def __push(func, queue, message):
 	message.queue = queue
 	message.timestamp('pipe.'+str(queue.id)+'.in')
 	result = func(queue, message)
-	if isinstance(result, simpype.message.Message) and queue.active.triggered:
+	if isinstance(result, simpype.Message) and queue.active.triggered:
 		queue.pipe.full()
 	return result
 

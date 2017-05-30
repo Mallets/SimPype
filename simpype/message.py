@@ -2,16 +2,13 @@ import copy
 import inspect
 import simpy
 
-import simpype.message
-import simpype.pipeline
-import simpype.random
-import simpype.resource
-import simpype.simulation
+import simpype
+import simpype.build
 
 
 class PropertyDict(dict):
 	def __init__(self, sim):
-		assert isinstance(sim, simpype.simulation.Simulation)
+		assert isinstance(sim, simpype.Simulation)
 		super().__init__()
 		self.sim = sim
 		self.env = sim.env
@@ -25,12 +22,12 @@ class PropertyDict(dict):
 
 class Property:
 	def __init__(self, sim, name, value):
-		assert isinstance(sim, simpype.simulation.Simulation)
+		assert isinstance(sim, simpype.Simulation)
 		self.sim = sim
 		self.env = sim.env
 		self.name = name
 		if isinstance(value, dict) and [f for f in value.values() if inspect.isfunction(f)]:
-			self._random = simpype.random.Random(self.sim, value)
+			self._random = simpype.Random(self.sim, value)
 			self._value = self._random.value
 		else:
 			self._random = None
@@ -46,14 +43,14 @@ class Property:
 		return property
 
 	def refresh(self):
-		if isinstance(self._random, simpype.random.Random):
+		if isinstance(self._random, simpype.Random):
 			self._value = self._random.value
 
 
 class Timestamp:
 	def __init__(self, message, timestamp, resource, event):
 		assert isinstance(message, Message)
-		assert isinstance(resource,simpype.resource.Resource)
+		assert isinstance(resource, simpype.Resource)
 		self.message = message
 		self.timestamp = float(timestamp)
 		self.resource = resource
@@ -62,7 +59,7 @@ class Timestamp:
 
 class Subscription:
 	def __init__(self, sim, message, event, callback):
-		assert isinstance(sim, simpype.simulation.Simulation)
+		assert isinstance(sim, simpype.Simulation)
 		assert isinstance(message, Message)
 		assert callable(callback)
 		self.sim = sim
@@ -75,8 +72,8 @@ class Subscription:
 
 class Message:
 	def __init__(self, sim, resource, id):
-		assert isinstance(sim, simpype.simulation.Simulation)
-		assert isinstance(resource, simpype.resource.Resource)
+		assert isinstance(sim, simpype.Simulation)
+		assert isinstance(resource, simpype.Resource)
 		self.sim = sim					
 		self.env = sim.env
 		self.id = id
@@ -86,35 +83,48 @@ class Message:
 		self.next = {}
 		self.visited = []
 		self.resource = resource
-		self.pipeline = simpype.pipeline.Pipeline(self.sim, self.id)
+		self.pipeline = simpype.Pipeline(self.sim, self.id)
 		self.property = PropertyDict(self.sim)
 		self.queue = None
 		self.seq_num = 0
 		self.subscription = {}
-		# Init
-		self.property['size'] = 1
-		self.property['priority'] = 0
 
-	def __setattr__(self, name, value):
-		if name == 'next':
-			if isinstance(value, simpype.resource.Resource):
-				value = {value.id: value}
-			elif isinstance(value, simpype.pipeline.Pipeline):
-				value = {value.first.id: value.first}
-		elif name == 'pipeline':
-			assert isinstance(value, simpype.pipeline.Pipeline)
-		elif name == 'queue':
-			assert isinstance(value, (simpype.queue.Queue, type(None)))
-		elif name == 'resource':
-			assert isinstance(value, simpype.resource.Resource)
-		self.__dict__[name] = value
-		if name == 'pipeline':
-			if hasattr(self, 'resource'):
-				self._update_next()
-		elif name == 'resource':
-			self.visited.append(self.resource)
-			if hasattr(self, 'pipeline'):
-				self._update_next()
+	@property
+	def next(self):
+		return self._next
+	
+	@next.setter
+	def next(self, value):
+		assert isinstance(value, (simpype.Resource, simpype.Pipeline, dict))
+		if isinstance(value, simpype.Resource):
+			self._next = {value.id: value}
+		elif isinstance(value, simpype.Pipeline):
+			self._next = {value.first.id: value.first}
+		elif isinstance(value, dict):
+			self._next = value
+
+	@property
+	def pipeline(self):
+		return self._pipeline
+	
+	@pipeline.setter
+	def pipeline(self, value):
+		assert isinstance(value, simpype.Pipeline)
+		self._pipeline = value
+		if hasattr(self, 'resource'):
+			self._update_next()
+
+	@property
+	def resource(self):
+		return self._resource
+	
+	@resource.setter
+	def resource(self, value):
+		assert isinstance(value, simpype.Resource)
+		self._resource = value
+		self.visited.append(value)
+		if hasattr(self, 'pipeline'):
+			self._update_next()
 
 	def _drop(self, message, cause):
 		self.done()

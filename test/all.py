@@ -39,6 +39,9 @@ gen1.message.property['lifetime'] = {
 gen1.message.property['items'] = {
 	0	: lambda: random.randint(0, 10),
 }
+gen1.message.property['priority'] = {
+	0	: lambda: 1,
+}
 
 res0 = sim.add_resource(id = 'res0')
 res0.random['service'] = {
@@ -54,19 +57,23 @@ res1.random['service'] = {
 	20	: lambda: random.expovariate(0.25)
 }
 
-res2 = sim.add_resource(id = 'res2')
-res3 = sim.add_resource(id = 'res3')
-res4 = sim.add_resource(id = 'res4')
+res2 = sim.add_resource(id = 'res2', pipe = 'p_wfq')
+res3 = sim.add_resource(id = 'res3', pipe = 'p_priority')
+res3.random['service'] = {
+	0	: lambda: 1.0,
+}
+res4 = sim.add_resource(id = 'res4', model = 'r_preemption', pipe = 'p_preemption')
 res5 = sim.add_resource(id = 'res5')
 res6 = sim.add_resource(id = 'res6')
 res6.random['service'] = {
 	0	: lambda: 5.0,
 }
+res6.pipe.queue['default'].capacity = 1
 res7 = sim.add_resource(id = 'res7')
 res7.random['service'] = {
 	0	: lambda: 5.0,
 }
-res8 = sim.add_resource(id = 'res8', model = 'cashier')
+res8 = sim.add_resource(id = 'res8', model = 'r_cashier')
 
 p0 = sim.add_pipeline(gen0, res0, res1)
 p1 = sim.add_pipeline(gen1, res1)

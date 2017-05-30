@@ -2,14 +2,13 @@ import inspect
 import simpy
 import types
 
+import simpype
 import simpype.build
-import simpype.resource
-import simpype.simulation
 
 
 def __enqueue(func, pipe, message):
 	assert isinstance(pipe, Pipe)
-	assert isinstance(message, simpype.message.Message)
+	assert isinstance(message, simpype.Message)
 	message.resource = pipe.resource
 	if inspect.isgeneratorfunction(func):
 		result = yield pipe.env.process(func(pipe, message))
@@ -27,7 +26,7 @@ def __dequeue(func, pipe):
 	return result
 
 def enqueue(arg):
-	if isinstance(arg, simpype.pipe.Pipe):
+	if isinstance(arg, Pipe):
 		pipe = arg
 		def decorator(func):
 			def wrapper(pipe, message):
@@ -42,7 +41,7 @@ def enqueue(arg):
 		return wrapper
 
 def dequeue(arg):
-	if isinstance(arg, simpype.pipe.Pipe):
+	if isinstance(arg, Pipe):
 		pipe = arg
 		def decorator(func):
 			def wrapper(pipe):
@@ -59,8 +58,8 @@ def dequeue(arg):
 
 class Pipe:
 	def __init__(self, sim, resource, id):
-		assert isinstance(sim, simpype.simulation.Simulation)
-		assert isinstance(resource, simpype.resource.Resource)
+		assert isinstance(sim, simpype.Simulation)
+		assert isinstance(resource, simpype.Resource)
 		self.sim = sim
 		self.env = sim.env
 		self.id = id
@@ -76,7 +75,7 @@ class Pipe:
 				yield request & self.available
 				self.available = self.env.event()
 				message = yield self.env.process(self.dequeue())
-				if isinstance(message, simpype.message.Message):
+				if isinstance(message, simpype.Message):
 					yield self.env.process(self.resource.service(message))
 				self.full()
 

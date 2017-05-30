@@ -8,9 +8,8 @@ import shutil
 import simpy
 import time
 
+import simpype
 import simpype.build
-import simpype.message
-import simpype.pipeline
 
 
 class Model:
@@ -118,7 +117,7 @@ class Simulation:
 	def add_pipeline(self, *args):
 		assert len(args) > 1
 		id = len(self.pipeline)
-		pipeline = simpype.pipeline.Pipeline(self, id)
+		pipeline = simpype.Pipeline(self, id)
 		for i in range(0, len(args)-1):
 			src, dst = args[i], args[i+1]
 			pipeline.add_pipe(src, dst)
@@ -135,7 +134,7 @@ class Simulation:
 	def merge_pipeline(self, *args):
 		assert len(args) > 1
 		id = len(self.pipeline)
-		pipeline = simpype.pipeline.Pipeline(self, id)
+		pipeline = simpype.Pipeline(self, id)
 		for i in range(0, len(args)):
 			pipeline.merge_pipe(args[i])
 		self._update_message(pipeline)

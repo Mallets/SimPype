@@ -13,7 +13,9 @@ from pkgutil import extend_path
 from simpype.simulation import Simulation
 from simpype.message import Message
 from simpype.pipe import Pipe
+from simpype.pipeline import Pipeline
 from simpype.queue import Queue
+from simpype.random import Random
 from simpype.resource import Resource
 
 
@@ -38,6 +40,9 @@ toc = (
     )),
     ('Pipe', (
         Pipe,
+    )),
+    ('Pipeline', (
+        Pipeline,
     )),
     ('Queue', (
         Queue,

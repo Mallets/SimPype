@@ -1,6 +1,6 @@
 import random
 
-import simpype.simulation
+import simpype
 
 
 class Random:
@@ -11,7 +11,7 @@ class Random:
 			self.process = process
 
 	def __init__(self, sim, step_dict):
-		assert isinstance(sim, simpype.simulation.Simulation)
+		assert isinstance(sim, simpype.Simulation)
 		self.sim = sim
 		self.env = sim.env
 		self.step_dict = step_dict
@@ -33,7 +33,7 @@ class Random:
 
 class RandomDict(dict):
 	def __init__(self, sim):
-		assert isinstance(sim, simpype.simulation.Simulation)
+		assert isinstance(sim, simpype.Simulation)
 		super().__init__()
 		self.sim = sim
 		self.env = sim.env

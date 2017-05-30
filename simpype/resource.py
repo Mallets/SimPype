@@ -2,15 +2,13 @@ import inspect
 import simpy
 import types
 
+import simpype
 import simpype.build
-import simpype.message
-import simpype.random
-import simpype.simulation
 
 
 def __service(func, resource, message):
 	assert isinstance(resource, Resource)
-	assert isinstance(message, simpype.message.Message)
+	assert isinstance(message, simpype.Message)
 	if inspect.isgeneratorfunction(func):
 		mid = str(message.id)+str(message.seq_num)
 		a_serve = resource.env.process(func(resource, message))
@@ -31,7 +29,7 @@ def __service(func, resource, message):
 
 
 def service(arg):
-	if isinstance(arg, simpype.resource.Resource):
+	if isinstance(arg, simpype.Resource):
 		resource = arg
 		def decorator(func):
 			def wrapper(resource, message):
@@ -48,7 +46,7 @@ def service(arg):
 
 class Task:
 	def __init__(self, sim, message, process):
-		assert isinstance(sim, simpype.simulation.Simulation)
+		assert isinstance(sim, simpype.Simulation)
 		self.sim = sim
 		self.env = sim.env
 		self.message = message
@@ -63,7 +61,7 @@ class Task:
 
 class Resource:
 	def __init__(self, sim, id, capacity = 1, pipe = None):
-		assert isinstance(sim, simpype.simulation.Simulation)
+		assert isinstance(sim, simpype.Simulation)
 		self.sim = sim
 		self.env = sim.env
 		self.id = id
@@ -78,7 +76,7 @@ class Resource:
 		self.task[mid].interrupt(cause = cause)
 
 	def send(self, message):
-		assert isinstance(message, simpype.message.Message)
+		assert isinstance(message, simpype.Message)
 		resource = list(message.next.values())
 		for i in range(0, len(resource)):
 			tmsg = message if i == (len(resource)-1) else message.copy()
