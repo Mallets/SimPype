@@ -34,6 +34,7 @@ p02 = sim.add_pipeline(gen02, res02)
 # Gen03 -> Res03
 gen03 = sim.add_generator(id = 'gen03', model = 'r_generator')
 gen03.random['arrival'] = {0: lambda: 1.0}
+gen03.message.property['lifetime'] = {0: lambda: 10.0}
 res03 = sim.add_resource(id = 'res03')
 res03.random['service'] = {0: lambda: 1.0}
 p03 = sim.add_pipeline(gen03, res03)
@@ -81,7 +82,7 @@ p06 = sim.add_pipeline(gen06, res06)
 gen07 = sim.add_generator(id = 'gen07')
 gen07.random['arrival'] = {0: lambda: 1.0}
 gen07.message.property['property'] = {0: lambda: random.randint(0,4)}
-res07 = sim.add_resource(id = 'res07', pipe = 'r_priority')
+res07 = sim.add_resource(id = 'res07', pipe = 'p_priority')
 res07.random['service'] = {0: lambda: 1.0}
 p07 = sim.add_pipeline(gen07, res07)
 
@@ -230,51 +231,32 @@ def dequeue(self):
 	message = self.queue['default'].pop()
 	return message
 
-#@simpype.pipe.enqueue(res12.pipe)
-#def enqueue(self, message):
-#	self.queue['default'].disable()
-#	yield self.env.timeout(0)
-#	message.timestamp('pipe.enqueue.test')
-#	message = self.queue['default'].push(message)
-#	if message.seq_num % 10 == 0:
-#		message.drop('badluck')
-#	self.queue['default'].enable()
-#	return message
-#
-#@simpype.pipe.dequeue(res1.pipe)
-#def dequeue(self):
-#	yield self.env.timeout(0)
-#	message = self.queue['default'].pop()
-#	if isinstance(message, simpype.Message):
-#		message.timestamp('pipe.dequeue.test')
-#	return message
-#
-#
-#@simpype.pipe.enqueue(res6.pipe)
-#def enqueue(self, message):
-#	message.timestamp('pipe.enqueue.test')
-#	return self.queue['default'].push(message)
-#
-#@simpype.pipe.dequeue(res6.pipe)
-#def dequeue(self):
-#	message = self.queue['default'].pop()
-#	if isinstance(message, simpype.Message):
-#		message.timestamp('pipe.dequeue.test')
-#	return message
-#
-#@simpype.queue.push(res7.pipe.queue['default'])
-#def push(self, message):
-#	self.buffer.append(message)
-#	message.timestamp('queue.push.test')
-#
-#@simpype.queue.pop(res7.pipe.queue['default'])
-#def pop(self):
-#	if len(self.buffer) > 0:
-#		message = self.buffer.pop(0)
-#		message.timestamp('queue.push.test')
-#		return message
-#	else:
-#		return None
+# Gen16 -> Res16
+gen16 = sim.add_generator(id = 'gen16')
+gen16.random['arrival'] = {0: lambda: 1.0}
+res16 = sim.add_resource(id = 'res16')
+res16.random['service'] = {0: lambda: 1.0}
+p16 = sim.add_pipeline(gen16, res16)
+
+@simpype.pipe.dequeue(res16.pipe.queue['default'])
+def dequeue(self):
+	message = self.queue['default'].pop()
+	message = self.queue['default'].pop()
+	return message
+
+@simpype.queue.push(res16.pipe.queue['default'])
+def push(self, message):
+	self.buffer.append(message)
+	message.timestamp('queue.push.test')
+
+@simpype.queue.pop(res16.pipe.queue['default'])
+def pop(self):
+	if len(self.buffer) > 0:
+		message = self.buffer.pop(0)
+		message.timestamp('queue.push.test')
+		return message
+	else:
+		return None
 #
 ## Run until t=60
 sim.run(until = 60)
