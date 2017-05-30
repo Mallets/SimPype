@@ -23,7 +23,7 @@ class PriorityPreemption(simpype.Pipe):
 	@simpype.pipe.enqueue
 	def enqueue(self, message):
 		if 'priority' not in message.property:
-			message.property['priority'] = 0
+			message.property['priority'] = 2
 
 		if message.property['priority'].value == 0:
 			m = self.queue['express'].push(message)

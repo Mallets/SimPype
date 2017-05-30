@@ -9,7 +9,7 @@ sim.model.dir = 'examples/model'
 
 sim.log.property('items')
 
-gen0 = sim.add_generator(id = 'gen0')
+gen0 = sim.add_generator(id = 'gen0', model = 'r_generator')
 gen0.random['initial'] = {
 	0	: lambda: 1.0
 }
@@ -40,7 +40,7 @@ gen1.message.property['items'] = {
 	0	: lambda: random.randint(0, 10),
 }
 gen1.message.property['priority'] = {
-	0	: lambda: 1,
+	0	: lambda: random.randint(0,4),
 }
 
 res0 = sim.add_resource(id = 'res0')
@@ -74,6 +74,7 @@ res7.random['service'] = {
 	0	: lambda: 5.0,
 }
 res8 = sim.add_resource(id = 'res8', model = 'r_cashier')
+res8.pipe.add_queue(id = 'test', model = 'p_wfq')
 
 p0 = sim.add_pipeline(gen0, res0, res1)
 p1 = sim.add_pipeline(gen1, res1)
@@ -140,8 +141,6 @@ def service(self, message):
 	message.subscribe(callback = fcallback, event = e)
 	message.subscribe(callback = fcallback, event = e, id = 'event')
 	message.subscribe(callback = fcallback, event = e, id = 'event')
-	if message.seq_num % 10 == 0:
-		message.drop('badluck')
 
 @simpype.resource.service(res5)
 def service(self, message):
@@ -173,5 +172,5 @@ def service(self, message):
 	if 'lifetime' in message.property:
 		message.unsubscribe('lifetime')
 
-# Run until t=30
-sim.run(until = 30)
+# Run until t=60
+sim.run(until = 60)

@@ -1,13 +1,13 @@
-import simpype.queue
+import simpype
 
 
-class Queue(simpype.queue.Queue):
+class Queue(simpype.Queue):
 	def __init__(self, sim, pipe, id):
 		super().__init__(sim, pipe, id)
 
 	@simpype.queue.push
 	def push(self, message):
-		assert isinstance(message, simpype.message.Message)
+		assert isinstance(message, simpype.Message)
 		if len(self.buffer) < self.capacity:
 			self.buffer.append(message)
 			return message

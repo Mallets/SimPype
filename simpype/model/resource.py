@@ -1,7 +1,7 @@
-import simpype.resource
+import simpype
 
 
-class Resource(simpype.resource.Resource):
+class Resource(simpype.Resource):
 	def __init__(self, sim, id, capacity = 1, pipe = None):
 		super().__init__(sim, id, capacity)
 		self.random['service'] = {0: lambda: 0}

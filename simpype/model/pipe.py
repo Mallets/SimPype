@@ -1,7 +1,7 @@
-import simpype.pipe
+import simpype
 
 
-class Pipe(simpype.pipe.Pipe):
+class Pipe(simpype.Pipe):
 	def __init__(self, sim, resource, id):
 		super().__init__(sim, resource, id)
 		self.add_queue(id = 'default')
