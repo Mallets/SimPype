@@ -264,9 +264,27 @@ def pop(self):
 # Gen17 -> Res17
 gen17 = sim.add_generator(id = 'gen17')
 gen17.random['arrival'] = {0: lambda: 1.0}
+gen17.message.property['size'] = {0: lambda: random.randint(1,20)}
+gen17.message.property['priority'] = 0
 res17 = sim.add_resource(id = 'res17', pipe = 'p_wfq')
 res17.random['service'] = {0: lambda: 1.0}
+res17.pipe.classes
+res17.pipe.queue[0].capacity = 20
 p17 = sim.add_pipeline(gen17, res17)
+
+# Gen18 -> Res18
+gen18 = sim.add_generator(id = 'gen18')
+gen18.random['arrival'] = {0: lambda: 1.0}
+gen18.message.property['size'] = {0: lambda: random.randint(1,20)}
+res18 = sim.add_resource(id = 'res18', pipe = 'p_wfq')
+res18.random['service'] = {0: lambda: 1.0}
+p18 = sim.add_pipeline(gen18, res18)
+
+@simpype.pipe.enqueue(res18.pipe)
+def enqueue(self, message):
+	self.queue[0].pop()
+	self.queue[0].pop()
+	self.queue[0].push(message)
 
 ## Run until t=60
 sim.run(until = 60)

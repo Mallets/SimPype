@@ -66,7 +66,7 @@ class Wfq(simpype.Pipe):
 	def __init__(self, sim, resource, id):
 		super().__init__(sim, resource, id)
 		self.rate = pow(10,1)
-		self.classes = 4
+		self.classes = 1
 
 	@property
 	def rate(self):
@@ -83,6 +83,7 @@ class Wfq(simpype.Pipe):
 	
 	@classes.setter
 	def classes(self, value):
+		self._classes = value
 		for i in range(len(self.queue), value):
 			q = self.add_queue(id = i, model = 'p_wfq')
 		self._set_queue_param()
