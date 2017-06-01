@@ -6,6 +6,7 @@ SimPype also allows to create both custom resource and pipe models.
 
 SimPype supports Python >= 3.3. Previous versions of pythons are not supported at the moment.
 You can install SimPype using pip: 
+
 	$ pip3 install simpype
 
 Documentiation is still work in progress.
