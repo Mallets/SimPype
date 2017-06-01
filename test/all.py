@@ -293,13 +293,17 @@ res19 = sim.add_resource(id = 'res19', pipe = 'p_wfq')
 res19.random['service'] = {0: lambda: 1.0}
 p19 = sim.add_pipeline(gen19, res19)
 
-# Gen20 -> Res20
-gen20 = sim.add_generator(id = 'gen20')
-gen20.random['arrival'] = {0: lambda: 1.0}
-gen20.message.property['priority'] = {0: lambda: random.randint(0,4)}
+# Gen20a |-> Res20
+# Gen20b |
+gen20a = sim.add_generator(id = 'gen20a')
+gen20a.random['arrival'] = {0: lambda: 2.0}
+gen20a.message.property['priority'] = {0: lambda: random.randint(0,4)}
+gen20b = sim.add_generator(id = 'gen20b')
+gen20b.random['arrival'] = {0: lambda: 2.0}
 res20 = sim.add_resource(id = 'res20', pipe = 'p_roundrobin')
 res20.random['service'] = {0: lambda: 1.0}
-p20 = sim.add_pipeline(gen20, res20)
+p20a = sim.add_pipeline(gen20a, res20)
+p20b = sim.add_pipeline(gen20b, res20)
 
 # Gen21a |-> Res21
 # Gen21b |
@@ -311,13 +315,37 @@ gen21b = sim.add_generator(id = 'gen21b')
 gen21b.random['arrival'] = {0: lambda: 2.5}
 gen21b.message.property['priority'] = 1
 gen21c = sim.add_generator(id = 'gen21c')
-gen21c.random['arrival'] = {0: lambda: 2.0}
+gen21c.random['arrival'] = {0: lambda: 4.0}
 gen21c.message.property['priority'] = {0: lambda: random.randint(2,4)}
+gen21d = sim.add_generator(id = 'gen21d')
+gen21d.random['arrival'] = {0: lambda: 4.0}
 res21 = sim.add_resource(id = 'res21', model = 'r_preemption', pipe = 'p_preemption')
 res21.random['service'] = {0: lambda: 1.0}
 p21a = sim.add_pipeline(gen21a, res21)
 p21b = sim.add_pipeline(gen21b, res21)
 p21c = sim.add_pipeline(gen21c, res21)
+p21d = sim.add_pipeline(gen21d, res21)
+
+# Gen22a |-> Res22
+# Gen22b |
+# Gen22c |
+gen22a = sim.add_generator(id = 'gen22a')
+gen22a.random['arrival'] = {0: lambda: 11.0}
+gen22a.message.property['priority'] = 0
+gen22b = sim.add_generator(id = 'gen22b')
+gen22b.random['arrival'] = {0: lambda: 2.5}
+gen22b.message.property['priority'] = 1
+gen22c = sim.add_generator(id = 'gen22c')
+gen22c.random['arrival'] = {0: lambda: 4.0}
+gen22c.message.property['priority'] = {0: lambda: random.randint(2,4)}
+gen22d = sim.add_generator(id = 'gen22d')
+gen22d.random['arrival'] = {0: lambda: 4.0}
+res22 = sim.add_resource(id = 'res22', pipe = 'p_preemption')
+res22.random['service'] = {0: lambda: 1.0}
+p22a = sim.add_pipeline(gen22a, res22)
+p22b = sim.add_pipeline(gen22b, res22)
+p22c = sim.add_pipeline(gen22c, res22)
+p22d = sim.add_pipeline(gen22d, res22)
 
 ## Run until t=60
 sim.run(until = 60)

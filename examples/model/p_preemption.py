@@ -39,7 +39,8 @@ class PriorityPreemption(simpype.Pipe):
 			if len(tlist) > 0:
 				task = max(tlist, key = lambda task: task.message.property['priority'].value)
 				task.interrupt(cause = 'preempted')
-				task.message.property['wait'] = task.message.property['wait'].value - (task.interrupted - task.started)
+				if 'wait' in task.message.property:
+					task.message.property['wait'] = task.message.property['wait'].value - (task.interrupted - task.started)
 				self.queue['preempted'].push(task.message)
 		return m
 
