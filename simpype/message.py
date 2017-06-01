@@ -7,13 +7,34 @@ import simpype.build
 
 
 class PropertyDict(dict):
+	""" A custom dictionary storing simpype.Property objects.
+
+	Attributes:
+		sim (:obj:simpype.Simulation)	: The SimPype simulation object
+		env (:obj:simpy.Environment)	: The SimPy environment object
+
+	"""
 	def __init__(self, sim):
+		""" PropertyDict __init__ method
+
+		Args:
+			sim (:obj:simpype.Simulation)	: The SimPype simulation object
+
+		"""
 		assert isinstance(sim, simpype.Simulation)
 		super().__init__()
 		self.sim = sim
 		self.env = sim.env
 	
 	def __setitem__(self, key, value):
+		""" Automatically creates a simpype.Property object when assigning a value
+
+		Args:
+			key (any)	: The dictionary key
+			value (any)	: The dictionaty value
+
+		"""
+		# Don't create a simpype.Property object if value is already a simpype.Property object
 		if isinstance(value, Property):
 			super().__setitem__(key, value)
 		else:
@@ -21,11 +42,32 @@ class PropertyDict(dict):
 
 
 class Property:
+	""" This class implements the properties used by simpype.Message objects.
+
+	Attributes:
+		sim (:obj:simpype.Simulation)	: The SimPype simulation object
+		env (:obj:simpy.Environment)	: The SimPy environment object
+		name (str)						: The property name
+		value (any)						: The property value
+
+	"""
 	def __init__(self, sim, name, value):
+		""" Property __init__ method
+
+		A property value can be either static or dynamic. In the latter case
+		the ``value`` must follow the simpype.Random value dictionary format.
+
+		Args:
+			sim (:obj:simpype.Simulation)	: The SimPype simulation object
+			name (str)						: The property name
+			value (any)						: The property value
+
+		"""
 		assert isinstance(sim, simpype.Simulation)
 		self.sim = sim
 		self.env = sim.env
 		self.name = name
+		# If ``value`` is a dictionary and contains lambda functions, create a simpype.Random object
 		if isinstance(value, dict) and [f for f in value.values() if inspect.isfunction(f)]:
 			self._random = simpype.Random(self.sim, value)
 			self._value = self._random.value
@@ -35,30 +77,85 @@ class Property:
 
 	@property
 	def value(self):
+		""" The value of the simpype.Property. """
 		return self._value
 
 	def copy(self):
+		""" Create a copy of the simpype.Property object
+
+		Returns:
+			:obj:simpype.Property
+		"""
 		property = Property(self.sim, self.name, self._value)
 		property._random = self._random
 		return property
 
 	def refresh(self):
+		""" Generate a new random value for the simpype.Property object. 
+		
+		This function does not produce any effects if the simpype.Property value is static.
+
+		"""
 		if isinstance(self._random, simpype.Random):
 			self._value = self._random.value
 
 
 class Timestamp:
-	def __init__(self, message, timestamp, resource, event):
+	""" This class implements the timestamps used by simpype.Message objects.
+
+	Timestamp objects are used for logging purposes.
+
+	Attributes:
+		message (:obj:simpype.Message)	: The SimPype message object this timestamp is associated to
+		timestamp (int,float)			: The timestamp
+		resource (:obj:simpype.Resource): The SimPype resource object creating the timestamp
+		event (str)						: The event that generated this timestamp
+
+	"""
+	def __init__(self, message, timestamp, resource, description):
+		""" Timestamp  __init__ method
+
+		Args:
+			message (:obj:simpype.Message)	: The SimPype message object this timestamp is associated to
+			timestamp (int,float)			: The timestamp
+			resource (:obj:simpype.Resource): The SimPype resource object creating the timestamp
+			description (str)				: The description of the timestamp
+
+		"""
 		assert isinstance(message, Message)
 		assert isinstance(resource, simpype.Resource)
 		self.message = message
 		self.timestamp = float(timestamp)
 		self.resource = resource
-		self.event = str(event)
+		self.description = str(description)
 
 
 class Subscription:
+	""" This class implements the timestamps used by simpype.Message objects.
+
+	Subscription used to execute a given function upong some events triggering.
+
+	Attributes:
+		sim (:obj:simpype.Simulation)	: The SimPype simulation object
+		env (:obj:simpy.Environment)	: The SimPy environment object
+		message (:obj:simpype.Message)	: The SimPype message object this timestamp is associated to
+		event (:obj:simpy.Event)		: The Simpy event the simpype.Message object is subscribed to
+		callback (python function)		: The python function to call upon event triggering
+		id (str)						: The simpype.Subscription id
+		disable (:obj:simpy.Event)		: The Simpy event used to remove the subscription
+
+	"""
 	def __init__(self, sim, message, event, callback, id):
+		""" Subscription  __init__ method
+			
+			Args:
+				sim (:obj:simpype.Simulation)	: The SimPype simulation object
+				message (:obj:simpype.Message)	: The SimPype message object this timestamp is associated to
+				event (:obj:simpy.Event)		: The Simpy event the simpype.Message object is subscribed to
+				callback (python function)		: The python function to call upon event triggering
+				id (str)						: The simpype.Subscription id
+
+		"""
 		assert isinstance(sim, simpype.Simulation)
 		assert isinstance(message, Message)
 		assert callable(callback)
@@ -72,7 +169,33 @@ class Subscription:
 
 
 class Message:
+	""" This class implements the simpype.Message object.
+
+	simpype.Message object is the atomic unit processed by simpype.Resource objects.
+
+	Attributes:
+		sim (:obj:simpype.Simulation)		: The SimPype simulation object
+		env (:obj:simpy.Environment)		: The SimPy environment object
+		id (str)							: The simpype.Message id
+		generated (float)					: The simulation time when this object is being generated
+		generator (:obj:simpype.Resource)	: The simpype.Resource generator implementation that created this message
+		is_alive (bool)						: The boolean value marking if the message is alive or not.	A message is not alive when no further steps are available or if it is used as a template by the generator
+		location (:obj:simpy.Resource, :obj:simpye.Pipe, :obj:simpype.Queue): The location of the simpype.Message inside the pipeline
+		property (:obj:simpype.PropertyDict): The PropertyDict dictionary storing the message Property objects
+		seq_num (int)						: The sequence number of the message
+		subscription (dict)					: The dictionary storing the Subscription objects
+		visited (list)						: The list of the visited simpype.Resource objects
+
+	"""
 	def __init__(self, sim, resource, id):
+		""" Subscription  __init__ method
+			
+		Args:
+			sim (:obj:simpype.Simulation)	: The SimPype simulation object
+			resource (:obj:simpype.Resource): The simpype.Resource object generating this message
+			id (str)						: The SimPype message id
+
+		"""
 		assert isinstance(sim, simpype.Simulation)
 		assert isinstance(resource, simpype.Resource)
 		self.sim = sim					
@@ -81,17 +204,22 @@ class Message:
 		self.generated = self.env.now
 		self.generator = resource
 		self.is_alive = True
-		self.next = {}
-		self.visited = []
-		self.resource = resource
-		self.pipeline = simpype.Pipeline(self.sim, self.id)
-		self.property = PropertyDict(self.sim)
 		self.location = resource
+		self.property = PropertyDict(self.sim)
 		self.seq_num = 0
 		self.subscription = {}
+		self.visited = []
+		self.next = {}
+		self.resource = resource
+		self.pipeline = simpype.Pipeline(self.sim, self.id)
 
 	@property
 	def next(self):
+		""" The next resources available to the message in the form of adjency list 
+
+		Next property admits only simpype.Resource, simpype.Pipeline, and next-compatible values
+
+		"""
 		return self._next
 	
 	@next.setter
@@ -106,6 +234,12 @@ class Message:
 
 	@property
 	def pipeline(self):
+		""" The pipeline associated to the message in the form of adjency.
+
+		A pipeline represents all the possible paths to the message.
+		Pipeline property admits only simpype.Pipeline objects as a value
+
+		"""
 		return self._pipeline
 	
 	@pipeline.setter
@@ -117,6 +251,11 @@ class Message:
 
 	@property
 	def resource(self):
+		""" The resource currently managing the message.
+
+		Resource property admits only simpype.Resource objects as a value
+
+		"""
 		return self._resource
 	
 	@resource.setter
@@ -128,16 +267,19 @@ class Message:
 			self._update_next()
 
 	def _drop(self, message, cause):
+		""" The callback function fro dropping a message """
 		self.done()
 		self.location._message_dropped(self, cause)
 
 	def _update_next(self):
+		""" Update the next adjency list based on the current resource managing the message """
 		if self.resource.id in self.pipeline.resource:
 			self.next = {p.id: p for p in self.pipeline.resource[self.resource.id]}
 		else:
 			self.next = {}
 
 	def _wait_event(self, subscription):
+		""" Wait the triggering of an event and execute the associated callbak """
 		value = yield subscription.event | subscription.disable
 		if subscription.event in value and self.is_alive:
 			subscription.callback(self, value[subscription.event])
@@ -145,6 +287,12 @@ class Message:
 			del self.subscription[subscription.id]
 	
 	def copy(self):
+		""" Create a dopy of this simpype.Message object. 
+		
+		Returns:
+			:obj:simpype.Message
+
+		"""
 		message = Message(self.sim, self.generator, self.id)
 		message.generated = copy.deepcopy(self.generated)
 		message.resource = self.resource
@@ -162,6 +310,7 @@ class Message:
 		return message
 
 	def done(self):
+		""" Deactivate the message, empty the next adjency list, and defuse all the active subscriptions """
 		self.is_alive = False
 		self.next = {}
 		e_list = list(self.subscription.keys())
@@ -169,12 +318,34 @@ class Message:
 			self.unsubscribe(id)
 
 	def drop(self, id = 'dropped', event = None):
+		""" Drop the simpype.Message object from the simulation.
+
+		If event is not None, subscribe the message to the event and the default drop callback
+
+		Args:
+			id (str, optional)					: The id identifying in the log this drop action
+			event (:obj:simpy.Event, optional)	: The event that will trigger the message dropping
+
+		"""
 		if event is None:
 			self._drop(self, id)
 		else:
+			assert isinstance(event, simpy.Event)
 			e = self.subscribe(event = event, callback = self._drop, id = id)
 
 	def subscribe(self, event, callback, id):
+		""" Subscribe the message to a given event which will execute a callback function.
+
+		Args:
+			event (:obj:simpy.Event)	: The simpy.Event to subscribe to
+			callback (python function)	: The function to call upon event triggering
+			id (str)					: The id identifying this subscription
+
+		Returns:
+			:obj:simpype.Subscription
+
+		"""
+		assert isinstance(event, simpy.Event)
 		assert callable(callback)
 		if id in self.subscription:
 			self.unsubscribe(id)
@@ -183,11 +354,23 @@ class Message:
 		self.env.process(self._wait_event(s))
 		return s
 
-	def timestamp(self, event):
-		ts = Timestamp(self, self.env.now, self.resource, event)
+	def timestamp(self, description):
+		""" Create and log a timestamp to the log file 
+		
+		Args:
+			description (str)	: The timestamp description
+		
+		"""
+		ts = Timestamp(self, self.env.now, self.resource, description)
 		self.sim.log.write(ts)
 		return ts
 
 	def unsubscribe(self, id):
+		""" Unsubscribe the message from the subscription ``id``
+
+		Args:
+			id (any)	: The subscription id to unsubscribe
+
+		"""
 		assert id in self.subscription
 		self.subscription[id].disable.succeed()

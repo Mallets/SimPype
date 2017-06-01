@@ -53,7 +53,7 @@ class Log:
 			self._log.info(",".join(self._h_fixed + self._h_property))
 			self._first = False
 		s = "%.9f" % timestamp.timestamp + "," + timestamp.message.id + "," + \
-			str(timestamp.message.seq_num) + "," + timestamp.resource.id + "," + timestamp.event 
+			str(timestamp.message.seq_num) + "," + timestamp.resource.id + "," + timestamp.description
 		for h in self._h_property:
 			if h not in timestamp.message.property:
 				timestamp.message.property[h] = 'NA'
@@ -83,7 +83,6 @@ class Log:
 
 class Simulation:
 	def __init__(self, id):
-		assert isinstance(id, str)
 		self.env = simpy.Environment()
 		self.id = id
 		self.resource = {}

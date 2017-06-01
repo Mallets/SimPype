@@ -12,6 +12,6 @@ script:
   - python3 examples/simple.py
   - python3 examples/splitter.py
   - python3 examples/supermarket.py
-  - coverage run test/all.py
+  - coverage run tests/all.py
 after_success:
   - codecov

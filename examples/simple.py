@@ -14,15 +14,15 @@ sim.log.dir = 'mylog'
 # [Mandatory] Add at least one generator to the simulation
 gen0 = sim.add_generator(id = 'gen0')
 # [Mandatory] Assign an arrival time
-# Generator.random is a dictionary accepting the following format:
-# generator.random[<your_id>] = {
+# Generator.random is a custom dictionary accepting the following format as values:
+# generator.random[<some_id>] = {
 # 	<initial_time> : lambda: <value>/<random_function>
 #	...
 # }
 # Random values can be generated in the following way:
-# 	generator.random[<your_id>].value
+# 	generator.random[<some_id>].value
 # The random value is:
-# 	<value>/<random_function> the simulation time is >= <initial_time>, 0 otherwise
+# 	<value>/<random_function> the simulation time is equal or greater than (>=) <initial_time>, 0 otherwise
 gen0.random['arrival'] = {
 	# From t=0 to t=10, arrival is constant every 3s
 	0	: lambda: 3.0,

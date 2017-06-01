@@ -4,10 +4,33 @@ import os
 
 
 def _import(model, prefix):
+	""" Dynamically import files given a path and a model.
+
+	This functions imports a python source file as python model.
+
+	Args:
+		model (str)		: The name of the file to import withouth .py extension
+		prefix (str)	: The path where the model is stored
+
+	Returns:
+		:obj:python.module
+	"""
 	module = importlib.machinery.SourceFileLoader(model, os.path.join(prefix, model+'.py')).load_module()
 	return module
 
 def logger(name, path):
+	""" Create a logger object.
+
+	This function creates a logger object for logging the simulation results.
+	A logger accepts a (str) as input and writes it to the log file.
+
+	Args:
+		name (str)	: The name of the logger
+		path (str)	: The path of the log file managed by the logger
+
+	Returns:
+		:obj:logging.Logger
+	"""
 	# Create a logger
 	logger = logging.getLogger(name)
 	logger.setLevel(logging.INFO)
@@ -22,6 +45,21 @@ def logger(name, path):
 	return logger
 
 def resource(sim, id, model = None, capacity = 1, pipe = None):
+	""" Create a simpype.Resource object.
+
+	Dynamically build a resource object based on the model.
+	If model is None the default resource model is built.
+
+	Args:
+		sim (:obj:simpype.Simulation)	: The SimPype simulation object
+		id (str)						: The resource id to build
+		model (str, optional)			: The model of the resource
+		capacity (int, optional)		: The capacity of the resource
+		pipe (str, optional)			: The model of the pipe associated to the resource
+
+	Returns:
+		:obj:simpype.Resource
+	"""
 	if model is None:
 		module = importlib.import_module('simpype.model.resource')
 	else:
@@ -29,6 +67,19 @@ def resource(sim, id, model = None, capacity = 1, pipe = None):
 	return module.resource(sim, id, capacity, pipe)
 
 def generator(sim, id, model = None):
+	""" Create a simpype.Resource object implementing a generator.
+
+	Dynamically build a generator object based on the model.
+	If model is None the default generator model is built.
+
+	Args:
+		sim (:obj:simpype.Simulation)	: The SimPype simulation object
+		id (str)						: The resource id to build
+		model (str, optional)			: The model of the resource
+
+	Returns:
+		:obj:simpype.Resource
+	"""
 	if model is None:
 		module = importlib.import_module('simpype.model.generator')
 	else:
@@ -36,6 +87,20 @@ def generator(sim, id, model = None):
 	return module.resource(sim, id)
 
 def pipe(sim, resource, id, model = None):
+	""" Create a simpype.Pipe object.
+
+	Dynamically build a pipe object based on the model.
+	If model is None the default pipe model is built.
+
+	Args:
+		sim (:obj:simpype.Simulation)		: The SimPype simulation object
+		resource (:obj:simpype.Resource)	: The resource object this pipe is associated to
+		id (str)							: The pipe id to build
+		model (str, optional)				: The model of the pipe
+
+	Returns:
+		:obj:simpype.Pipe
+	"""
 	if model is None:
 		module = importlib.import_module('simpype.model.pipe')
 	else:
@@ -43,6 +108,20 @@ def pipe(sim, resource, id, model = None):
 	return module.pipe(sim, resource, id)
 
 def queue(sim, pipe, id, model = None):
+	""" Create a simpype.Queue object.
+
+	Dynamically build a queue object based on the model.
+	If model is None the default queue model is built.
+
+	Args:
+		sim (:obj:simpype.Simulation)	: The SimPype simulation object
+		pipe (:obj:simpype.Pipe)		: The pipe object this queue is associated to
+		id (str)						: The queue id to build
+		model (str, optional)			: The model of the queue
+
+	Returns:
+		:obj:simpype.Pipe
+	"""
 	if model is None:
 		module = importlib.import_module('simpype.model.queue')
 	else:
