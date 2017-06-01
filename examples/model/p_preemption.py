@@ -29,15 +29,17 @@ class PriorityPreemption(simpype.Pipe):
 			m = self.queue['express'].push(message)
 		elif message.property['priority'].value == 1:
 			m = self.queue['fast'].push(message)
+		elif message.property['priority'].value == 2:
+			m = self.queue['slow'].push(message)
 		else:
 			m = self.queue['slow'].push(message)
 
 		if isinstance(m, simpype.message.Message) and len(self.queue['express']) > 0:
-			tlist = [t for t in self.resource.task.values() if message.property['priority'].value != 0]
+			tlist = [t for t in self.resource.task.values() if t.process.is_alive and t.message.property['priority'].value != 0]
 			if len(tlist) > 0:
 				task = max(tlist, key = lambda task: task.message.property['priority'].value)
 				task.interrupt(cause = 'preempted')
-				task.message.property['wait'] = abs(task.message.property['wait'].value - (task.interrupted - task.started))
+				task.message.property['wait'] = task.message.property['wait'].value - (task.interrupted - task.started)
 				self.queue['preempted'].push(task.message)
 		return m
 

@@ -22,18 +22,24 @@ class RoundRobin(simpype.pipe.Pipe):
 		if 'priority' not in message.property:
 			message.property['priority'] = 0
 
+		p = 0
 		if message.property['priority'].value == 3:
 			m = self.queue[3].push(message)
+			p = 3
 		elif message.property['priority'].value == 2:
 			m = self.queue[2].push(message)
+			p = 2
 		elif message.property['priority'].value == 1:
 			m = self.queue[1].push(message)
+			p = 1
 		elif message.property['priority'].value == 0:
 			m = self.queue[0].push(message)
+			p = 0
 		else:
 			m = self.queue[0].push(message)
+			p = 0
 
-		return self.queue[priority].push(message)
+		return self.queue[p].push(message)
 
 
 # Do NOT remove

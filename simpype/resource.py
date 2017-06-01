@@ -53,12 +53,11 @@ class Task:
 		self.message = message
 		self.started = self.env.now
 		self.interrupted = None
-		self._process = process
+		self.process = process
 
 	def interrupt(self, cause = None):
-		if self._process.is_alive:
-			self._process.interrupt(cause = cause)
-			self.interrupted = self.env.now
+		self.process.interrupt(cause = cause)
+		self.interrupted = self.env.now
 
 
 class Resource:

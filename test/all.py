@@ -286,5 +286,38 @@ def enqueue(self, message):
 	self.queue[0].pop()
 	self.queue[0].push(message)
 
+# Gen19 -> Res19
+gen19 = sim.add_generator(id = 'gen19')
+gen19.random['arrival'] = {0: lambda: 1.0}
+res19 = sim.add_resource(id = 'res19', pipe = 'p_wfq')
+res19.random['service'] = {0: lambda: 1.0}
+p19 = sim.add_pipeline(gen19, res19)
+
+# Gen20 -> Res20
+gen20 = sim.add_generator(id = 'gen20')
+gen20.random['arrival'] = {0: lambda: 1.0}
+gen20.message.property['priority'] = {0: lambda: random.randint(0,4)}
+res20 = sim.add_resource(id = 'res20', pipe = 'p_roundrobin')
+res20.random['service'] = {0: lambda: 1.0}
+p20 = sim.add_pipeline(gen20, res20)
+
+# Gen21a |-> Res21
+# Gen21b |
+# Gen21c |
+gen21a = sim.add_generator(id = 'gen21a')
+gen21a.random['arrival'] = {0: lambda: 11.0}
+gen21a.message.property['priority'] = 0
+gen21b = sim.add_generator(id = 'gen21b')
+gen21b.random['arrival'] = {0: lambda: 2.5}
+gen21b.message.property['priority'] = 1
+gen21c = sim.add_generator(id = 'gen21c')
+gen21c.random['arrival'] = {0: lambda: 2.0}
+gen21c.message.property['priority'] = {0: lambda: random.randint(2,4)}
+res21 = sim.add_resource(id = 'res21', model = 'r_preemption', pipe = 'p_preemption')
+res21.random['service'] = {0: lambda: 1.0}
+p21a = sim.add_pipeline(gen21a, res21)
+p21b = sim.add_pipeline(gen21b, res21)
+p21c = sim.add_pipeline(gen21c, res21)
+
 ## Run until t=60
 sim.run(until = 60)
