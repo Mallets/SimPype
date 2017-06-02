@@ -1,3 +1,7 @@
+"""
+SimPype's resource.
+
+"""
 import inspect
 import simpy
 import types
@@ -30,6 +34,37 @@ def __service(func, resource, message):
 
 
 def service(arg):
+	""" Decorator for overloading the default :class:`Resource` service behavior.
+
+
+	Args:
+		arg (:class:`Resource`)(``self``):
+			The :class:`Resource` instance.
+	
+			
+	If the overloading is done in scripts, the :class:`Resource` instance must be provided as decorator argument.
+	
+	.. code-block:: python
+
+		myresource = sim.add_resource(id = 'myresource')
+
+		@simpype.resource.service(myresource)
+		def service(self, message):
+			yield self.env.timeout(1.0)
+
+	If the overloading is done inside a Resource subclass, the decorator must be called without any arguments. :class:`Resource` instance is automatically provided through ``self``.
+
+	.. code-block:: python
+	   
+		class MyResource(simpype.Resource):
+			def __init__(self, sim, id, capacity = 1, pipe = None):
+				super().__init__(sim, id, capacity, pipe)
+
+			@simpype.resource.service
+			def service(self, message):
+				yield self.env.timeout(1.0)
+	
+	"""
 	if isinstance(arg, simpype.Resource):
 		resource = arg
 		def decorator(func):
@@ -46,6 +81,31 @@ def service(arg):
 
 
 class Task:
+	""" This class implements the :class:`Task` managed by the :class:`Resource`.
+
+	Args:
+		sim (:class:`Simulation`):
+			The SimPype simulation object.
+		message (:class:`~simpype.message.Message`):
+			The message being processed in this class
+		process (simpy.events.Process):
+			The SimPy process to execute
+
+	Attributes:
+		sim (:class:`Simulation`):
+			The SimPype simulation object.
+		env (simpy.Environment):
+			The SimPy environment object.
+		message (:class:`~simpype.message.Message`):
+			The message being processed in this class
+		started (float):
+			The simulation time this task was started
+		interrupted (float):
+			The simulation time this task was interrupted. ``None`` if active.
+		process (simpy.events.Process):
+			The SimPy process being executed
+
+	"""
 	def __init__(self, sim, message, process):
 		assert isinstance(sim, simpype.Simulation)
 		self.sim = sim
@@ -61,6 +121,35 @@ class Task:
 
 
 class Resource:
+	""" This class implements the :class:`Resource` object.
+
+	Args:
+		sim (:class:`Simulation`):
+			The SimPype simulation object.
+		id (str):
+			The resource id.
+		capacity (int):
+			The simpy.Resource capacity.
+		pipe (:class:`Pipe`):
+			The SimPype pipe model associated to this resource.
+
+	Attributes:
+		sim (:class:`Simulation`):
+			The SimPype simulation object.
+		env (simpy.Environment):
+			The SimPy environment object.
+		id (str):
+			The simpype.Resource id.
+		use (simpy.Resource):
+			The SimPy resource object.
+		pipe (:class:`Pipe`):
+			The SimPype pipe object.
+		random (:class:`RandomDict`):
+			The SimPype RandomDict object.
+		task (dict):
+			The dictionary storing the task currenty being executed by the resource.
+
+	"""
 	def __init__(self, sim, id, capacity = 1, pipe = None):
 		assert isinstance(sim, simpype.Simulation)
 		self.sim = sim
@@ -79,6 +168,13 @@ class Resource:
 		self.task[mid].interrupt(cause = cause)
 
 	def send(self, message):
+		""" Send a :class:`~simpype.message.Message`.
+
+		Args:
+			message (:class:`~simpype.message.Message`):
+				The message to send.
+
+		"""
 		assert isinstance(message, simpype.Message)
 		resource = list(message.next.values())
 		for i in range(0, len(resource)):

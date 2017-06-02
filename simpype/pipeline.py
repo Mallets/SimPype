@@ -1,8 +1,36 @@
+"""
+SimPype's pipeline.
+
+"""
+
 import simpype.resource
 import simpype.simulation
 
 
 class Pipeline:
+	""" The pipeline connecting the various :class:`~simpype.resource.Resource` instances.
+
+	Args:
+		sim (:class:`Simulation`):
+			The SimPype simulation object.
+		id (str):
+			The pipeline id.
+
+	Attributes:
+		sim (:class:`Simulation`):
+			The SimPype simulation object.
+		env (simpy.Environment):
+			The SimPy environment object.
+		id (str):
+			The pipeline id.
+		resource (dict):
+			The dictionary storing the connected resources in the form of adjency list.
+		first (:class:`~simpype.resource.Resource`):
+			The first resource of the pipeline.
+		last (:class:`~simpype.resource.Resource`):
+			The last resource of the pipeline.
+
+	"""
 	def __init__(self, sim, id):
 		assert isinstance(sim, simpype.simulation.Simulation)
 		self.sim = sim
@@ -13,6 +41,17 @@ class Pipeline:
 		self.last = None
 
 	def add_pipe(self, src, dst):
+		""" Add a pipe to the pipeline.
+		
+		Connect resource ``src`` to resource ``dst``.
+
+		Args:
+			src (:class:`~simpype.resource.Resource`):
+				The source resource of the pipe.
+			dst (:class:`~simpype.resource.Resource`):
+				The destination resource of the pipe.
+
+		"""
 		assert isinstance(src, (simpype.resource.Resource, Pipeline))
 		assert isinstance(dst, (simpype.resource.Resource, Pipeline))
 		# Src check
@@ -37,6 +76,13 @@ class Pipeline:
 		self.last = dst if isinstance(dst, simpype.resource.Resource) else dst.last
 
 	def merge_pipe(self, pipeline):
+		""" Merge ``pipeline`` with this pipeline.
+
+		Args:
+			pipeline (:class:`Pipeline`):
+				The pipeline to be merged with this pipeline.
+
+		"""
 		assert isinstance(pipeline, Pipeline)
 		for key, value in pipeline.resource.items():
 			if key not in self.resource:
