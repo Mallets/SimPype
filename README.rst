@@ -36,4 +36,4 @@ A simple scenario with one generator and one resource can be defined as follows 
 
 A scheme of the simulation steps is the following:
 
-.. image:: _static/generate.svg
+.. image:: docs/_static/generate.svg
