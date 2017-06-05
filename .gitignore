@@ -11,4 +11,5 @@ __pycache__
 
 # Sphinx docs
 _build
+_static
 _templates
