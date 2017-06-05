@@ -10,8 +10,11 @@ install:
   - pip install codecov
 script:
   - python3 examples/basic.py
+  - python3 examples/preemption_norestart.py
+  - python3 examples/preemption_restart.py
+  - python3 examples/priority.py
+  - python3 examples/renege.py
   - python3 examples/splitter.py
-  - python3 examples/supermarket.py
   - coverage run tests/all.py
 after_success:
   - codecov
