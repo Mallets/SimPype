@@ -11,6 +11,8 @@ Documentation for SimPype
 .. toctree::
    :maxdepth: 2
 
+   tutorial/index
+   examples/index
    api_reference/index
 
 

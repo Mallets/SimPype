@@ -229,9 +229,9 @@ class Log:
 	def write(self, entry):
 		""" Write a log entry.
 			
-			Args:
-				entry (:class:`~simpype.message.Timestamp`)(str):
-					The entry to be logged. If the entry is :class:`~simpype.message.Timestamp`
+		Args:
+			entry (:class:`~simpype.message.Timestamp`)(str):
+				The entry to be logged. If the entry is :class:`~simpype.message.Timestamp`
 
 		"""
 		if isinstance(entry, simpype.message.Timestamp):
@@ -240,6 +240,13 @@ class Log:
 			self._write_cfg(entry)
 
 	def property(self, property):
+		""" Enable the logging of a message property.
+
+		Args:
+			property (str):
+				The property to log.
+
+		"""
 		self._h_property.append(property)
 
 

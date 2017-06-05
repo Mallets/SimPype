@@ -30,6 +30,7 @@ res1.random['service'] = {
 splitter = sim.add_resource(id = 'splitter')
 @simpype.resource.service(splitter)
 def service(self, message):
+	yield self.env.timeout(1.0)
 	if message.seq_num % 2 == 0:
 		message.next = res0
 	else:

@@ -25,7 +25,7 @@ def __pop(func, queue):
 		message.queue = None
 	return message
 
-def push(arg):
+def push(*args):
 	""" Decorator for overloading the default :class:`Queue` push behavior.
 
 	Args:
@@ -36,10 +36,12 @@ def push(arg):
 	
 	.. code-block:: python
 
-		resource = sim.add_resource(id = 'myresource')
-		resource.add_queue(id = 'myqueue')
+		myresource1 = sim.add_resource(id = 'myresource1')
+		myresource1.add_queue(id = 'myqueue')
+		myresource2 = sim.add_resource(id = 'myresource1')
+		myresource2.add_queue(id = 'myqueue')
 
-		@simpype.queue.push(myresource.pipe['myqueue'])
+		@simpype.queue.push(myresource1.pipe['myqueue'], myresource2.pipe['myqueue'])
 		def push(self, message):
 			self.buffer.append(message)
 			return message
@@ -58,21 +60,22 @@ def push(arg):
 				return message
 	
 	"""
-	if isinstance(arg, simpype.Queue):
-		queue = arg
-		def decorator(func):
-			def wrapper(queue, message):
-				return __push(func, queue, message)
-			queue.push = types.MethodType(wrapper, queue)
-			return wrapper
-		return decorator
+	if isinstance(args[0], simpype.Queue):
+		for a in args:
+			queue = a
+			def decorator(func):
+				def wrapper(queue, message):
+					return __push(func, queue, message)
+				queue.push = types.MethodType(wrapper, queue)
+				return wrapper
+			return decorator
 	else:
-		func = arg
+		func = args[0]
 		def wrapper(queue, message):
 			return __push(func, queue, message)
 		return wrapper
 
-def pop(arg):
+def pop(*args):
 	""" Decorator for overloading the default :class:`Queue` pop behavior.
 
 	Args:
@@ -83,10 +86,12 @@ def pop(arg):
 	
 	.. code-block:: python
 
-		resource = sim.add_resource(id = 'myresource')
-		resource.add_queue(id = 'myqueue')
+		myresource1 = sim.add_resource(id = 'myresource1')
+		myresource1.add_queue(id = 'myqueue')
+		myresource2 = sim.add_resource(id = 'myresource2')
+		myresource2.add_queue(id = 'myqueue')
 
-		@simpype.queue.pop(myresource.pipe['myqueue'])
+		@simpype.queue.pop(myresource1.pipe['myqueue'], myresource2.pipe['myqueue'])
 		def pop(self):
 			return self.buffer.pop(0)
 
@@ -103,16 +108,17 @@ def pop(arg):
 				return self.buffer.pop(0)
 	
 	"""
-	if isinstance(arg, simpype.Queue):
-		queue = arg
-		def decorator(func):
-			def wrapper(queue):
-				return __pop(func, queue)
-			queue.pop = types.MethodType(wrapper, queue)
-			return wrapper
-		return decorator
+	if isinstance(args[0], simpype.Queue):
+		for a in args:
+			queue = a
+			def decorator(func):
+				def wrapper(queue):
+					return __pop(func, queue)
+				queue.pop = types.MethodType(wrapper, queue)
+				return wrapper
+			return decorator
 	else:
-		func = arg
+		func = args[0]
 		def wrapper(queue):
 			return __pop(func, queue)
 		return wrapper

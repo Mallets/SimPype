@@ -1,4 +1,4 @@
-import simpype.pipe
+import simpype
 
 
 class Priority(simpype.pipe.Pipe):

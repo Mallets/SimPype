@@ -1,5 +1,32 @@
 """
-SimPype's resource.
+SimPype's resources process :class:`~simpype.message.Message` objects.
+The behavior of each resource can be customized by overloading the custom
+``service`` function through the decorator ``@simpype.resource.service``.
+See :ref:`resource` :func:`service` for more details on how to customize a :class:`Resource` behavior.
+
+.. code-block :: python
+
+   import simpype
+   import random
+
+   sim = simpype.Simulation(id = 'simple')
+   gen0 = sim.add_generator(id = 'gen0')
+   gen0.message.property['wait'] = {
+       0: lambda: random.uniform(0,1)
+   }
+   res0 = sim.add_resource(id = 'res0')
+   res0.random['service'] = {
+       0: lambda: 2.0
+   }
+
+   @simpype.resource.service(res0)
+   def service(self, message):
+       # Wait for a random time
+       yield self.env.timeout(self.random['service'])
+       # Wait for a time as reported in the message property
+       yield self.env.timeout(message.property['wait'].value)
+
+   sim.run(until = 10)
 
 """
 import inspect
@@ -33,7 +60,7 @@ def __service(func, resource, message):
 		message.done()
 
 
-def service(arg):
+def service(*args):
 	""" Decorator for overloading the default :class:`Resource` service behavior.
 
 
@@ -43,12 +70,14 @@ def service(arg):
 	
 			
 	If the overloading is done in scripts, the :class:`Resource` instance must be provided as decorator argument.
+	Multiple instances can be provided as argument.
 	
 	.. code-block:: python
 
-		myresource = sim.add_resource(id = 'myresource')
+		myresource1 = sim.add_resource(id = 'myresource1')
+		myresource2 = sim.add_resource(id = 'myresource2')
 
-		@simpype.resource.service(myresource)
+		@simpype.resource.service(myresource1, myresource2)
 		def service(self, message):
 			yield self.env.timeout(1.0)
 
@@ -65,16 +94,17 @@ def service(arg):
 				yield self.env.timeout(1.0)
 	
 	"""
-	if isinstance(arg, simpype.Resource):
-		resource = arg
-		def decorator(func):
-			def wrapper(resource, message):
-				return __service(func, resource, message)
-			resource.service = types.MethodType(wrapper, resource)
-			return wrapper
-		return decorator
+	if isinstance(args[0], simpype.Resource):
+		for a in args:
+			resource = a
+			def decorator(func):
+				def wrapper(resource, message):
+					return __service(func, resource, message)
+				resource.service = types.MethodType(wrapper, resource)
+				return wrapper
+			return decorator
 	else:
-		func = arg
+		func = args[0]
 		def wrapper(resource, message):
 			return __service(func, resource, message)
 		return wrapper

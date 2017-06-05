@@ -132,13 +132,7 @@ def fcallback(message, value):
 	global e
 	message.timestamp('callback.' + str(value))
 
-@simpype.resource.service(res10a)
-def service(self, message):
-	global e
-	message.subscribe(event = e, callback = fcallback, id = 'event')
-	yield self.env.timeout(1.0)
-
-@simpype.resource.service(res10b)
+@simpype.resource.service(res10a, res10b)
 def service(self, message):
 	global e
 	message.subscribe(event = e, callback = fcallback, id = 'event')
@@ -170,11 +164,14 @@ p11 = sim.add_pipeline(gen11, res11)
 # Gen12 -> Res12
 gen12 = sim.add_generator(id = 'gen12')
 gen12.random['arrival'] = {0: lambda: 1.0}
-res12 = sim.add_resource(id = 'res12')
-res12.random['service'] = {0: lambda: 1.0}
-p12 = sim.add_pipeline(gen12, res12)
+res12a = sim.add_resource(id = 'res12a')
+res12a.random['service'] = {0: lambda: 1.0}
+res12b = sim.add_resource(id = 'res12b')
+res12b.random['service'] = {0: lambda: 1.0}
+p12a = sim.add_pipeline(gen12, res12a)
+p12b = sim.add_pipeline(gen12, res12b)
 
-@simpype.pipe.enqueue(res12.pipe)
+@simpype.pipe.enqueue(res12a.pipe, res12b.pipe)
 def enqueue(self, message):
 	message.timestamp('pipe.enqueue.test.function')
 	if message.seq_num % 2 == 0:
@@ -182,7 +179,7 @@ def enqueue(self, message):
 	else:
 		return self.queue['default'].push(message)
 
-@simpype.pipe.dequeue(res12.pipe)
+@simpype.pipe.dequeue(res12a.pipe, res12b.pipe)
 def dequeue(self):
 	message = self.queue['default'].pop()
 	if isinstance(message, simpype.Message):
@@ -234,17 +231,20 @@ def dequeue(self):
 # Gen16 -> Res16
 gen16 = sim.add_generator(id = 'gen16')
 gen16.random['arrival'] = {0: lambda: 1.0}
-res16 = sim.add_resource(id = 'res16')
-res16.random['service'] = {0: lambda: 1.0}
-p16 = sim.add_pipeline(gen16, res16)
+res16a = sim.add_resource(id = 'res16a')
+res16a.random['service'] = {0: lambda: 1.0}
+res16b = sim.add_resource(id = 'res16b')
+res16b.random['service'] = {0: lambda: 1.0}
+p16a = sim.add_pipeline(gen16, res16a)
+p16b = sim.add_pipeline(gen16, res16b)
 
-@simpype.pipe.dequeue(res16.pipe)
+@simpype.pipe.dequeue(res16a.pipe, res16b.pipe)
 def dequeue(self):
 	message = self.queue['default'].pop()
 	message = self.queue['default'].pop()
 	return message
 
-@simpype.queue.push(res16.pipe.queue['default'])
+@simpype.queue.push(res16a.pipe.queue['default'], res16b.pipe.queue['default'])
 def push(self, message):
 	self.disable()
 	self.buffer.append(message)
@@ -252,7 +252,7 @@ def push(self, message):
 	self.enable()
 	return message
 
-@simpype.queue.pop(res16.pipe.queue['default'])
+@simpype.queue.pop(res16a.pipe.queue['default'], res16b.pipe.queue['default'])
 def pop(self):
 	if len(self.buffer) > 0:
 		message = self.buffer.pop(0)
