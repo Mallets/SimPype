@@ -180,6 +180,10 @@ class Log:
 			The SimPy environment object.
 		date (datetime.now()):
 			The real world creation time of the simulation environment.
+		file (bool):
+			Write the logs to a file if ``True``. Default value is ``True``.
+		print(bool):
+			Print the logs to the console if ``True``. Default value is ``False``.
 
 	"""
 	def __init__(self, sim):
@@ -188,6 +192,8 @@ class Log:
 		self.env = sim.env
 		self.date = datetime.datetime.now()
 		self.dir = os.path.join(os.getcwd(), 'log')
+		self.file = True
+		self.print = False
 		self._h_fixed = ["timestamp", "message", "seq_num", "resource", "event"]
 		self._h_property = []
 		self._first = True
@@ -203,10 +209,11 @@ class Log:
 
 	def _write_log(self, timestamp):
 		assert isinstance(timestamp, simpype.message.Timestamp)
+		s = ""
 		if self._first:
-			self._log.info(",".join(self._h_fixed + self._h_property))
+			s = s + ",".join(self._h_fixed + self._h_property) + "\n"
 			self._first = False
-		s = "%.9f" % timestamp.timestamp + "," + timestamp.message.id + "," + \
+		s = s + "%.9f" % timestamp.timestamp + "," + timestamp.message.id + "," + \
 			str(timestamp.message.seq_num) + "," + timestamp.resource.id + "," + timestamp.description
 		for h in self._h_property:
 			if h not in timestamp.message.property:
@@ -214,13 +221,21 @@ class Log:
 			p = timestamp.message.property[h]
 			p = "%.9f" % p if isinstance(p, float) else str(p.value)
 			s = s + "," + p
-		self._log.info(s)
+		if self.file:
+			self._log.info(s)
+		if self.print:
+			print(s)
 	
 	def _write_cfg(self, entry):
-		self._cfg.info(str(entry))
+		if self.file:
+			self._cfg.info(str(entry))
+		if self.print:
+			print(str(entry))
 
 	def init(self):
 		""" Initialize the log folder and the simulation loggers. """
+		if not self.file:
+			return None
 		if not os.path.exists(self.dir):
 			os.makedirs(self.dir)
 		self._log = simpype.build.logger('log', os.path.join(self.dir, 'sim.log'))

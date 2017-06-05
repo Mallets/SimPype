@@ -10,6 +10,8 @@ sim.seed = 42
 # [Optional] Configure the log directory. 
 # [Default] Log are store by default in the 'current working directory/log'
 sim.log.dir = 'mylog'
+sim.log.file = False
+sim.log.print = True
 
 # [Mandatory] Add at least one generator to the simulation
 gen0 = sim.add_generator(id = 'gen0')

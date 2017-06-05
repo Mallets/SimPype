@@ -15,6 +15,12 @@ SimPype automatically installs SimPy as dependency.
 
 SimPype documentation can be found on `ReadTheDocs <http://simpype.readthedocs.io>`_ while the source code repository is available on `GitHub <https://github.com/Mallets/SimPype>`_.
 
+Scope
+=====
+
+SimPype is tailored to scenarios where the queueing disciplines and the resources occupation are key parts of the system under simulation.
+People queueing at a post office, supermarket, car wash, cafeteria, etc. are examples of such scenarios.
+
 Concept
 =======
 
@@ -30,10 +36,45 @@ A simple scenario with one generator and one resource can be defined as follows 
     >>> gen0 = sim.add_generator(id = 'gen0')
     >>> gen0.random['arrival'] = {0: lambda: random.expovariate(1.0)}
     >>> res0 = sim.add_resource(id = 'res0')
-    >>> res0.random['service'] = {0: lambda: random.expovariate(1.0)}
+    >>> res0.random['service'] = {0: lambda: random.expovariate(2.0)}
     >>> p0 = sim.add_pipeline(gen0, res0)
     >>> sim.run(until = 10)
 
-A scheme of the simulation steps is the following:
+The simulation steps can be summarized as follows:
 
-.. image:: docs/_static/generate.svg
+    1. The generator waits a ``random arrival time`` and generates a message;
+    2. The generator ``sends the message`` to the resource;
+    3. The ``message is enqueued`` in the resource's pipe;
+    4. When the resource becomes available, the ``message is dequeued`` from the pipe;
+    5. The ``message is served`` by the resource;
+    6. The message leaves the resource after a ``random service time`` and is sent to the next resource (if any) - Go to step 3.
+
+Any simulation steps can be customized as desired. Follows the `tutorial <http://simpype.readthedocs.io/en/latest/tutorial/index.html>`_ to learn how to customize your simulation environment.
+
+SimPype also provides a built-in logging system for your simulation that automatically logs the simulation steps 3, 4, and 5.
+The built-in system produces the logs in a tidy format where each variable is saved in its own column and each observation is saved in its own row:
+
+    >>> timestamp,message,seq_num,resource,event
+    ... 0.000000000,gen0,0,res0,pipe.default.in
+    ... 0.000000000,gen0,0,res0,pipe.default.out
+    ... 0.030509067,gen0,0,res0,resource.serve
+    ... 4.283987797,gen0,1,res0,pipe.default.in
+    ... 4.283987797,gen0,1,res0,pipe.default.out
+    ... 4.296562508,gen0,1,res0,resource.serve
+    ... 4.944812881,gen0,2,res0,pipe.default.in
+    ... 4.944812881,gen0,2,res0,pipe.default.out
+    ... 5.128244999,gen0,2,res0,resource.serve
+    ... 6.402898951,gen0,3,res0,pipe.default.in
+    ... 6.402898951,gen0,3,res0,pipe.default.out
+    ... 7.044417615,gen0,3,res0,resource.serve
+    ... 7.561061272,gen0,4,res0,pipe.default.in
+    ... 7.561061272,gen0,4,res0,pipe.default.out
+    ... 7.729431178,gen0,5,res0,pipe.default.in
+    ... 8.129979622,gen0,4,res0,resource.serve
+    ... 8.129979622,gen0,5,res0,pipe.default.out
+    ... 8.171601538,gen0,6,res0,pipe.default.in
+    ... 8.886733703,gen0,5,res0,resource.serve
+    ... 8.886733703,gen0,6,res0,pipe.default.out
+    ... 8.949540209,gen0,6,res0,resource.serve
+
+This data format is well-suited for being directly processed by data manipulation tools like `pandas <http://pandas.pydata.org/>`_  or `dplyr <https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html>`_. SimPype does not provide any tools for parsing the data. 

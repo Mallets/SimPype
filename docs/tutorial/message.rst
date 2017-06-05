@@ -133,3 +133,39 @@ The callback function must be defined according to the following format:
 
    def callback(message, value):
        ... your code here ...
+
+Next
+====
+
+The next hop of a message can be dynamically changed by setting the message ``next`` variable:
+
+.. code-block :: python
+
+    import simpype
+    import random
+
+    sim = simpype.Simulation(id = 'next')
+    gen0 = sim.add_generator(id = 'gen')
+    gen0.random['arrival'] = {0: lambda 1.0}
+    res0 = sim.add_resource(id = 'res0')
+    res1 = sim.add_resource(id = 'res1')
+
+    # Change next
+    splitter = sim.add_resource(id = 'splitter')
+    @simpype.resource.service(splitter)
+    def service(self, message):
+            yield self.env.timeout(1.0)
+            if message.seq_num % 2 == 0:
+                    message.next = res0
+            else:
+                    message.next = res1
+
+
+    # Add a pipeline connecting the generator to the resource
+    p0 = sim.add_pipeline(gen0, splitter)
+    p1 = sim.add_pipeline(splitter, res0)
+    p2 = sim.add_pipeline(splitter, res1)
+    pM = sim.merge_pipeline(p0, p1, p2)
+
+    # Run until t=30
+    sim.run(until = 30)

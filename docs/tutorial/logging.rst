@@ -114,3 +114,16 @@ You can configure SimPype's logger to log any additional message properties as y
     0.000000000,gen0,0,res0,pipe.default.in,1
 
 If a message does not have the custom property, SimPype logs ``NA`` instead.
+
+Print the logs
+==============
+
+If you prefer to print the logs instead of storing them in a file, you can do it by setting the following variables in the simulation environment:
+
+.. code-block :: python
+
+    import simpype
+
+    sim = simpype.Simulation(id = 'simple')
+    sim.log.file = False
+    sim.log.print = True
