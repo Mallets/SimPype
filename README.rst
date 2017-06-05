@@ -9,7 +9,8 @@ SimPype also allows to create both custom resource and pipe models that can be r
 SimPype supports only Python >= 3.3. Previous versions of pythons are not supported.
 The quickest way to install SimPype is through `pip`: 
 
-$ pip3 install simpype
+.. code-block :: bash
+  $ pip3 install simpype
 
 SimPype documentation can be found on `ReadTheDocs <http://simpype.readthedocs.io>`_.
 SimPype repository is available on `GitHub <https://github.com/Mallets/SimPype>`_.
