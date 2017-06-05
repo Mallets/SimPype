@@ -30,7 +30,7 @@ def __dequeue(func, pipe):
 		result = func(pipe)
 	return result
 
-def enqueue(*args):
+def enqueue(arg):
 	""" Decorator for overloading the default :class:`Pipe` enqueue behavior.
 
 	Args:
@@ -41,12 +41,10 @@ def enqueue(*args):
 	
 	.. code-block:: python
 
-		myresource1 = sim.add_resource(id = 'myresource1')
-		myresource1.add_queue(id = 'myqueue')
-		myresource2 = sim.add_resource(id = 'myresource2')
-		myresource2.add_queue(id = 'myqueue')
+		myresource = sim.add_resource(id = 'myresource')
+		myresource.add_queue(id = 'myqueue')
 
-		@simpype.pipe.enqueue(myresource1.pipe, myresource2.pipe)
+		@simpype.pipe.enqueue(myresource.pipe)
 		def enqueue(self, message):
 			return self.queue['myqueue'].push(message)
 
@@ -64,22 +62,21 @@ def enqueue(*args):
 				return self.queue['myqueue'].push(message)
 	
 	"""
-	if isinstance(args[0], Pipe):
-		for a in args:
-			pipe = a
-			def decorator(func):
-				def wrapper(pipe, message):
-					return __enqueue(func, pipe, message)
-				pipe.enqueue = types.MethodType(wrapper, pipe)
-				return wrapper
-			return decorator
+	if isinstance(arg, Pipe):
+		pipe = arg
+		def decorator(func):
+			def wrapper(pipe, message):
+				return __enqueue(func, pipe, message)
+			pipe.enqueue = types.MethodType(wrapper, pipe)
+			return wrapper
+		return decorator
 	else:
-		func = args[0]
+		func = arg
 		def wrapper(pipe, message):
 			return __enqueue(func, pipe, message)
 		return wrapper
 
-def dequeue(*args):
+def dequeue(arg):
 	""" Decorator for overloading the default :class:`Pipe` dequeue behavior.
 
 	Args:
@@ -91,12 +88,10 @@ def dequeue(*args):
 	
 	.. code-block:: python
 
-		myresource1 = sim.add_resource(id = 'myresource1')
-		myresource1.add_queue(id = 'myqueue')
-		myresource2 = sim.add_resource(id = 'myresource2')
-		myresource2.add_queue(id = 'myqueue')
+		myresource = sim.add_resource(id = 'myresource')
+		myresource.add_queue(id = 'myqueue')
 
-		@simpype.pipe.dequeue(myresource1.pipe, myresource2.pipe)
+		@simpype.pipe.dequeue(myresource.pipe)
 		def dequeue(self):
 			return self.queue['myqueue'].pop()
 
@@ -114,17 +109,16 @@ def dequeue(*args):
 				return self.queue['myqueue'].pop()
 
 	"""	
-	if isinstance(args[0], Pipe):
-		for a in args:
-			pipe = a
-			def decorator(func):
-				def wrapper(pipe):
-					return __dequeue(func, pipe)
-				pipe.dequeue = types.MethodType(wrapper, pipe)
-				return wrapper
-			return decorator
+	if isinstance(arg, Pipe):
+		pipe = arg
+		def decorator(func):
+			def wrapper(pipe):
+				return __dequeue(func, pipe)
+			pipe.dequeue = types.MethodType(wrapper, pipe)
+			return wrapper
+		return decorator
 	else:
-		func = args[0]
+		func = arg
 		def wrapper(pipe):
 			return __dequeue(func, pipe)
 		return wrapper

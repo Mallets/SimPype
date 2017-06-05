@@ -60,7 +60,7 @@ def __service(func, resource, message):
 		message.done()
 
 
-def service(*args):
+def service(arg):
 	""" Decorator for overloading the default :class:`Resource` service behavior.
 
 
@@ -70,14 +70,12 @@ def service(*args):
 	
 			
 	If the overloading is done in scripts, the :class:`Resource` instance must be provided as decorator argument.
-	Multiple instances can be provided as argument.
 	
 	.. code-block:: python
 
-		myresource1 = sim.add_resource(id = 'myresource1')
-		myresource2 = sim.add_resource(id = 'myresource2')
+		myresource = sim.add_resource(id = 'myresource1')
 
-		@simpype.resource.service(myresource1, myresource2)
+		@simpype.resource.service(myresource)
 		def service(self, message):
 			yield self.env.timeout(1.0)
 
@@ -94,17 +92,16 @@ def service(*args):
 				yield self.env.timeout(1.0)
 	
 	"""
-	if isinstance(args[0], simpype.Resource):
-		for a in args:
-			resource = a
-			def decorator(func):
-				def wrapper(resource, message):
-					return __service(func, resource, message)
-				resource.service = types.MethodType(wrapper, resource)
-				return wrapper
-			return decorator
+	if isinstance(arg, simpype.Resource):
+		resource = arg
+		def decorator(func):
+			def wrapper(resource, message):
+				return __service(func, resource, message)
+			resource.service = types.MethodType(wrapper, resource)
+			return wrapper
+		return decorator
 	else:
-		func = args[0]
+		func = arg
 		def wrapper(resource, message):
 			return __service(func, resource, message)
 		return wrapper
