@@ -13,6 +13,7 @@ This tutorial explains how to build and configure a SimPype simulation.
    installation
    simulation
    logging
+   pipeline
    random
    message
    resource

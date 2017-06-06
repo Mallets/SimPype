@@ -1,8 +1,8 @@
 .. _resource:
 
-===================
-Resource's behavior
-===================
+========
+Resource
+========
 
 The resource behavior can be customized in case of more complex operations are needed
 in addition to the simple random generated service time.
@@ -20,7 +20,7 @@ Inline customization
 
 In this example, the service time of the resource also depends on the message property value ``wait``.
 
-.. code-block :: python
+.. code-block:: python
 
    import simpype
    import random
@@ -51,7 +51,7 @@ Alternatively, a separate `resource model` can be created to implement the same 
 
 1. Edit ``myresource.py`` with a text editor and create a resource model in the following way:
 
-.. code-block :: python
+.. code-block:: python
     
     import simpype
 
@@ -72,7 +72,7 @@ Alternatively, a separate `resource model` can be created to implement the same 
 
 2. Create your simulation scenario including the new model:
 
-.. code-block :: python
+.. code-block:: python
 
    import simpype
    import random
@@ -91,7 +91,7 @@ Alternatively, a separate `resource model` can be created to implement the same 
 
 3. Make sure that the file and directory structure is the following: 
 
-.. code-block :: none
+.. code-block:: none
 
     <working directory>
     |-- simple.py 
@@ -99,7 +99,7 @@ Alternatively, a separate `resource model` can be created to implement the same 
 
 4. If you want to change the directory where SimPype looks for custom models, set the following variable in the simulation environment:
 
-.. code-block :: python
+.. code-block:: python
 
    import simpype
 
@@ -109,7 +109,7 @@ Alternatively, a separate `resource model` can be created to implement the same 
 Please make sure you have reading permissions for ``<your model dir>``. 
 In this case, the file and directory structure would look like:
 
-.. code-block :: none
+.. code-block:: none
 
     <working directory>
     |-- simple.py 

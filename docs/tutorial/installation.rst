@@ -17,25 +17,25 @@ If you don't have ``pip3`` installed on your system, you might install it with t
 
 On Centos:
 
-.. code-block :: bash
+.. code-block:: bash
 
    $ yum install python34-pip
 
 On Fedora:
 
-.. code-block :: bash
+.. code-block:: bash
 
    $ dnf install python3-pip
 
 On Debian:
 
-.. code-block :: bash
+.. code-block:: bash
 
    $ apt-get install python3-pip
 
 On Ubuntu:
 
-.. code-block :: bash
+.. code-block:: bash
 
    $ apt-get install python3-pip
 
@@ -62,7 +62,7 @@ From GitHub
 Alternatively, you can clone `SimPype repository <https://github.com/Mallets/SimPype>`_ 
 from `GitHub <https://github.com/>`_ by typing in a terminal windows:
 
-.. code-block :: bash
+.. code-block:: bash
 
     $ git clone https://github.com/Mallets/SimPype.git
 

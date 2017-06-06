@@ -234,12 +234,11 @@ class Log:
 
 	def init(self):
 		""" Initialize the log folder and the simulation loggers. """
-		if not self.file:
-			return None
-		if not os.path.exists(self.dir):
-			os.makedirs(self.dir)
-		self._log = simpype.build.logger('log', os.path.join(self.dir, 'sim.log'))
-		self._cfg = simpype.build.logger('cfg', os.path.join(self.dir, 'sim.cfg')) 
+		if self.file:
+			if not os.path.exists(self.dir):
+				os.makedirs(self.dir)
+			self._log = simpype.build.logger('log', os.path.join(self.dir, 'sim.log'))
+			self._cfg = simpype.build.logger('cfg', os.path.join(self.dir, 'sim.cfg')) 
 
 	def write(self, entry):
 		""" Write a log entry.
@@ -336,14 +335,14 @@ class Simulation:
 		return generator
 
 	def add_pipeline(self, *args):
-		""" Add a :class:`~simpype.resource.Resource` object to the simulation environment.
+		""" Chain multiples :class:`~simpype.resource.Resource` or :class:`~simpype.pipeline.Pipeline` objects into a pipeline..
 
 		Args:
-			*args (:class:`~simpype.resource.Resource`):
-				Create a pipeline by chaining 2 or more :class:`~simpype.resource.Resource` objects.
+			*args (:class:`~simpype.resource.Resource`)(:class:`~simpype.pipeline.Pipeline`):
+				Create a pipeline by chaining 2 or more :class:`~simpype.resource.Resource` or :class:`~simpype.pipeline.Pipeline` objects.
 		
 		Returns:
-			:class:`~simpype.resource.Resource`
+			:class:`~simpype.pipeline.Pipeline`
 
 		"""
 		assert len(args) > 1
@@ -379,14 +378,14 @@ class Simulation:
 		return resource
 
 	def merge_pipeline(self, *args):
-		""" Merge varioues pipeline into a single pipeline.
+		""" Merge varioues :class:`~simpype.pipeline.Pipeline` objects into a single pipeline.
 
 		Args:
 			*args (:class:`~simpype.pipeline.Pipeline`):
 				Create a pipeline by merging 2 or more :class:`~simpype.pipeline.Pipeline` objects.
 		
 		Returns:
-			:class:`~simpype.resource.Resource`
+			:class:`~simpype.pipeline.Pipeline`
 
 		"""
 		assert len(args) > 1

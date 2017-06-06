@@ -6,7 +6,7 @@ Splitter
 
 The scenario of the simulation is the following:
 
-.. code-block :: none
+.. code-block:: none
 
                                /-> |Resource #0|
    |Generator| -> |Splitter| -(
@@ -16,7 +16,7 @@ Where messages with even sequence number are sent to `Resource #0` and
 messages with odd  sequence number are sent to `Resource #1` instead.
 The scenario is so implemented with SimPype:
 
-.. code-block :: python
+.. code-block:: python
 
 	import simpype
 	import random
@@ -67,7 +67,7 @@ The scenario is so implemented with SimPype:
 
 ``sim.cfg`` stored under the ``log`` folder contains:
 
-.. code-block :: none
+.. code-block:: none
 
     Simulation Seed: 42
     Simulation Time: 30.000000000
@@ -75,7 +75,7 @@ The scenario is so implemented with SimPype:
 
 ``sim.log`` stored under the ``log`` folder contains:
 
-.. code-block :: none
+.. code-block:: none
 
     timestamp,message,seq_num,resource,event
     0.000000000,gen,0,splitter,pipe.default.in

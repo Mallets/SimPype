@@ -6,13 +6,13 @@ Basic
 
 The scenario of the simulation is the following:
 
-.. code-block :: none
+.. code-block:: none
 
    |Generator| -> |Resource|
 
 The scenario is so implemented with SimPype:
 
-.. code-block :: python
+.. code-block:: python
 
     # Import SimPype module
     import simpype
@@ -72,7 +72,7 @@ The scenario is so implemented with SimPype:
 
 ``sim.cfg`` stored under the ``mylog`` folder contains:
 
-.. code-block :: none
+.. code-block:: none
 
     Simulation Seed: 42
     Simulation Time: 30.000000000
@@ -80,7 +80,7 @@ The scenario is so implemented with SimPype:
 
 ``sim.log`` stored under the ``mylog`` folder contains:
 
-.. code-block :: none
+.. code-block:: none
     
     timestamp,message,seq_num,resource,event
     0.000000000,gen0,0,res0,pipe.default.in

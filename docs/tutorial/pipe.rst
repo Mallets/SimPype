@@ -1,8 +1,8 @@
 .. _pipe:
 
-===============
-Pipe's behavior
-===============
+====
+Pipe
+====
 
 The pipe behavior of a given resource can be customized in case of more complex queueing operations are needed
 in addition to the simple FIFO discipline.
@@ -22,7 +22,7 @@ Inline customization
 
 In this example, a priority queue with two service classes is implemented.
 
-.. code-block :: python
+.. code-block:: python
 
    import simpype
    import random
@@ -66,7 +66,7 @@ Alternatively, a separate `pipe model` can be created to implement the same pipe
 
 1. Edit ``mypipe.py`` with a text editor and create a pipe model in the following way:
 
-.. code-block :: python
+.. code-block:: python
 
     import simpype
 
@@ -99,7 +99,7 @@ Alternatively, a separate `pipe model` can be created to implement the same pipe
 
 2. Create your simulation scenario including the new model:
 
-.. code-block :: python
+.. code-block:: python
 
    import simpype
    import random
@@ -118,7 +118,7 @@ Alternatively, a separate `pipe model` can be created to implement the same pipe
 
 3. Make sure that the file and directory structure is the following: 
 
-.. code-block :: none
+.. code-block:: none
 
     <working directory>
     |-- simple.py 
@@ -126,7 +126,7 @@ Alternatively, a separate `pipe model` can be created to implement the same pipe
 
 4. If you want to change the directory where SimPype looks for custom models, set the following variable in the simulation environment:
 
-.. code-block :: python
+.. code-block:: python
 
    import simpype
 
@@ -136,7 +136,7 @@ Alternatively, a separate `pipe model` can be created to implement the same pipe
 Please make sure you have reading permissions for ``<your model dir>``. 
 In this case, the file and directory structure would look like:
 
-.. code-block :: none
+.. code-block:: none
 
     <working directory>
     |-- simple.py 

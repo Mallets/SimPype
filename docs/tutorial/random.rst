@@ -1,14 +1,14 @@
 .. _random:
 
-=========================
-Generate random variables
-=========================
+================
+Random variables
+================
 
 SimPype comes with a custom random variable generation system that allows you to generate 
 random values according to different random distributions depending on the current simulation time.
 See :class:`~simpype.random.Random` for a detailed API reference.
 
-.. code-block :: python
+.. code-block:: python
 
     import simpype
 
@@ -25,7 +25,7 @@ Where each dictionary element is so defined:
 
 An example of random variable initialization is the following:
 
-.. code-block :: python
+.. code-block:: python
 
     import simpype
     import random
@@ -45,7 +45,7 @@ An example of random variable initialization is the following:
 
 To generate a random value:
 
-.. code-block :: python
+.. code-block:: python
 
     # Simulation time = 5.0
     random_value = myrand.value    # random_value = 3.0
@@ -63,7 +63,7 @@ Generator initial and arrival time
 
 The initial and arrival time of a generator is described with a :class:`~simpype.random.Random` variable.
 
-.. code-block :: python
+.. code-block:: python
 
     import simpype
     import random
@@ -91,7 +91,7 @@ Resource service time
 
 The service time of a resource is described with a :class:`~simpype.random.Random` variable.
 
-.. code-block :: python
+.. code-block:: python
 
     import simpype
     import random
@@ -115,7 +115,7 @@ Message property
 
 A message property can be described with a a :class:`~simpype.random.Random` variable.
 
-.. code-block :: python
+.. code-block:: python
 
     import simpype
     import random
@@ -135,6 +135,6 @@ Please note that in this case there is no need of calling the ``simpype.Random``
 The message object automatically converts the dictionary into a :class:`~simpype.random.Random` object.
 Please also note that property values can be randomly generated, nevertheless once they are generated they will always return the same value unless an explicit refresh is called
 
-.. code-block :: python
+.. code-block:: python
 
    message.property['test'].refresh()

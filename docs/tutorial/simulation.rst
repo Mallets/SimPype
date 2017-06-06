@@ -1,13 +1,13 @@
 .. _simulation:
 
-=========================
-Write a simple simulation
-=========================
+=================
+Simple simulation
+=================
 
 To build your first SimPype simulation, you simply need a console environment and a text editor.
 Write the following block of code into a text file, e.g. ``simple.py``.
 
-.. code-block :: python
+.. code-block:: python
 
 	# [Mandatory] Import SimPype module
 	import simpype
@@ -39,7 +39,7 @@ Write the following block of code into a text file, e.g. ``simple.py``.
 
 Now run the simulation by typing the following command in the console:
 
-.. code-block :: bash
+.. code-block:: bash
 
     $ python3 simple.py
 

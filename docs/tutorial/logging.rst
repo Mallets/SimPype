@@ -1,13 +1,13 @@
 .. _logging:
 
-===========================
-Read and configure the logs
-===========================
+==========
+Log system
+==========
 
 SimPype automatically logs the simulation results in a log directory having the following 
 structure in case of our simple simulation (see :ref:`simulation`):
 
-.. code-block :: none
+.. code-block:: none
 
     <working directory>
     |-- simple.py 
@@ -20,7 +20,7 @@ structure in case of our simple simulation (see :ref:`simulation`):
 
 ``sim.cfg`` contains information about the simulation environment and has the following format:
 
-.. code-block :: none
+.. code-block:: none
 
     Simulation Seed: 1369068917606710528
     Simulation Time: 5.000000000
@@ -28,7 +28,7 @@ structure in case of our simple simulation (see :ref:`simulation`):
 
 ``sim.log`` contains the log of the simulation events and looks like:
 
-.. code-block :: none
+.. code-block:: none
 
     timestamp,message,seq_num,resource,event
     0.000000000,gen0,0,res0,pipe.default.in
@@ -55,21 +55,21 @@ structure in case of our simple simulation (see :ref:`simulation`):
 
 Let's analyze the first three log entries:
 
-.. code-block :: none
+.. code-block:: none
 
     timestamp,message,seq_num,resource,event
     0.000000000,gen0,0,res0,pipe.default.in
 
 1. A message with id ``gen0`` and sequence number ``0`` has been enqueued to the pipe of resource ``res0`` in the queue ``default`` at simulation time ``0.000000000``.
 
-.. code-block :: none
+.. code-block:: none
 
     timestamp,message,seq_num,resource,event
     0.000000000,gen0,0,res0,pipe.default.out
 
 2. The message with id ``gen0`` and sequence number ``0`` has been dequeued from the pipe of resource ``res0`` and queue ``default`` at simulation time ``0.000000000``. This means that the resource was available as soon as the message reached the resource. Therefore, the time spent waiting in the pipe was ``0``.
 
-.. code-block :: none
+.. code-block:: none
 
     timestamp,message,seq_num,resource,event
     0.252555552,gen0,0,res0,resource.serve
@@ -81,7 +81,7 @@ Change log directory
 
 You can change the default log directory by setting the following variable in the simulation environment:
 
-.. code-block :: python
+.. code-block:: python
 
     import simpype
 
@@ -95,7 +95,7 @@ Log custom message properties
 
 You can configure SimPype's logger to log any additional message properties as you wish by calling the following function in the simulation environment:
 
-.. code-block :: python
+.. code-block:: python
 
     import simpype
 
@@ -108,7 +108,7 @@ You can configure SimPype's logger to log any additional message properties as y
 
 ``sim.log`` file now will containt a column containing the value of ``test`` message property:
 
-.. code-block :: none
+.. code-block:: none
 
     timestamp,message,seq_num,resource,event,test
     0.000000000,gen0,0,res0,pipe.default.in,1
@@ -120,7 +120,7 @@ Print the logs
 
 If you prefer to print the logs instead of storing them in a file, you can do it by setting the following variables in the simulation environment:
 
-.. code-block :: python
+.. code-block:: python
 
     import simpype
 
