@@ -347,24 +347,18 @@ p22b = sim.add_pipeline(gen22b, res22)
 p22c = sim.add_pipeline(gen22c, res22)
 p22d = sim.add_pipeline(gen22d, res22)
 
-# Gen 23 |-> Res23
-gen23 = sim.add_generator(id = 'gen23')
-res23 = sim.add_resource(id = 'res23')
-gen23.random['arrival'] = {0: lambda: 1.0}
-p23 = sim.add_pipeline(gen23, res23)
+sim.log.file = True
+sim.log.print = False
+sim.run(until = 30)
 
-@simpype.resource.service(res23)
-def service(self, message):
-	if message.seq_num % 20 == 0:
-		sim.log.file = False
-		sim.log.print = True
-	if message.seq_num % 30 == 0:
-		sim.log.file = True
-		sim.log.print = True
-	if message.seq_num % 40 == 0:
-		sim.log.file = True
-		sim.log.print = False
-
-
-## Run until t=60
+sim.log.file = False
+sim.log.print = True
 sim.run(until = 60)
+
+sim.log.file = True
+sim.log.print = True
+sim.run(until = 90)
+
+sim.log.file = False
+sim.log.print = False
+sim.run(until = 120)
