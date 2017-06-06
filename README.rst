@@ -1,5 +1,17 @@
-.. image:: https://travis-ci.org/Mallets/SimPype.svg?branch=master
-    :target: https://travis-ci.org/Mallets/SimPype
+.. only:: html
+
+    .. image:: https://travis-ci.org/Mallets/SimPype.svg?branch=master
+        :target: https://travis-ci.org/Mallets/SimPype
+
+    .. image:: https://codecov.io/gh/Mallets/SimPype/branch/master/graph/badge.svg
+        :target: https://codecov.io/gh/Mallets/SimPype
+
+    .. image:: https://badge.fury.io/py/simpype.svg
+        :target: https://badge.fury.io/py/simpype
+
+    .. image:: https://readthedocs.org/projects/simpype/badge/?version=latest
+        :target: http://simpype.readthedocs.io/en/latest/?badge=latest
+
 
 ========
 Overview
