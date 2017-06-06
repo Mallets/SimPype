@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/Mallets/SimPype.svg?branch=master
+    :target: https://travis-ci.org/Mallets/SimPype
+
 ========
 Overview
 ========
