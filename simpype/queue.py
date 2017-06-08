@@ -11,7 +11,7 @@ def __push(func, queue, message):
 	assert isinstance(queue, simpype.Queue)
 	assert isinstance(message, simpype.Message)
 	message.location = queue
-	message.timestamp('pipe.'+str(queue.id)+'.in')
+	message.timestamp('pipe.in')
 	result = func(queue, message)
 	if isinstance(result, simpype.Message) and queue.active.triggered:
 		queue.pipe.full()
@@ -21,7 +21,7 @@ def __pop(func, queue):
 	assert isinstance(queue, Queue)
 	message = func(queue)
 	if isinstance(message, simpype.Message):
-		message.timestamp('pipe.'+str(queue.id)+'.out')
+		message.timestamp('pipe.out')
 		message.queue = None
 	return message
 
