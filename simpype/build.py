@@ -41,7 +41,7 @@ def logger(name, path):
 		Python Logger from logging module :class:`logging.Logger`
 	"""
 	# Create a logger
-	logger = logging.getLogger(name)
+	logger = logging.getLogger(path)
 	logger.setLevel(logging.INFO)
 	# Create a file handler
 	# delay = True does not create the logging file if nothing is written
