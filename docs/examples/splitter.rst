@@ -78,60 +78,60 @@ The scenario is so implemented with SimPype:
 .. code-block:: none
 
     timestamp,message,seq_num,resource,event
-    0.000000000,gen,0,splitter,pipe.default.in
-    0.000000000,gen,0,splitter,pipe.default.out
+    0.000000000,gen,0,splitter,pipe.in
+    0.000000000,gen,0,splitter,pipe.out
     1.000000000,gen,0,splitter,resource.serve
-    1.000000000,gen,0,res0,pipe.default.in
-    1.000000000,gen,0,res0,pipe.default.out
-    3.000000000,gen,1,splitter,pipe.default.in
+    1.000000000,gen,0,res0,pipe.in
+    1.000000000,gen,0,res0,pipe.out
+    3.000000000,gen,1,splitter,pipe.in
     3.000000000,gen,0,res0,resource.serve
-    3.000000000,gen,1,splitter,pipe.default.out
+    3.000000000,gen,1,splitter,pipe.out
     4.000000000,gen,1,splitter,resource.serve
-    4.000000000,gen,1,res1,pipe.default.in
-    4.000000000,gen,1,res1,pipe.default.out
-    6.000000000,gen,2,splitter,pipe.default.in
-    6.000000000,gen,2,splitter,pipe.default.out
+    4.000000000,gen,1,res1,pipe.in
+    4.000000000,gen,1,res1,pipe.out
+    6.000000000,gen,2,splitter,pipe.in
+    6.000000000,gen,2,splitter,pipe.out
     7.000000000,gen,2,splitter,resource.serve
-    7.000000000,gen,2,res0,pipe.default.in
-    7.000000000,gen,2,res0,pipe.default.out
-    9.000000000,gen,3,splitter,pipe.default.in
+    7.000000000,gen,2,res0,pipe.in
+    7.000000000,gen,2,res0,pipe.out
+    9.000000000,gen,3,splitter,pipe.in
     9.000000000,gen,2,res0,resource.serve
-    9.000000000,gen,3,splitter,pipe.default.out
+    9.000000000,gen,3,splitter,pipe.out
     10.000000000,gen,3,splitter,resource.serve
-    10.000000000,gen,3,res1,pipe.default.in
-    12.000000000,gen,4,splitter,pipe.default.in
+    10.000000000,gen,3,res1,pipe.in
+    12.000000000,gen,4,splitter,pipe.in
     12.000000000,gen,1,res1,resource.serve
-    12.000000000,gen,4,splitter,pipe.default.out
-    12.000000000,gen,3,res1,pipe.default.out
+    12.000000000,gen,4,splitter,pipe.out
+    12.000000000,gen,3,res1,pipe.out
     13.000000000,gen,4,splitter,resource.serve
-    13.000000000,gen,4,res0,pipe.default.in
-    13.000000000,gen,4,res0,pipe.default.out
-    15.000000000,gen,5,splitter,pipe.default.in
+    13.000000000,gen,4,res0,pipe.in
+    13.000000000,gen,4,res0,pipe.out
+    15.000000000,gen,5,splitter,pipe.in
     15.000000000,gen,4,res0,resource.serve
-    15.000000000,gen,5,splitter,pipe.default.out
+    15.000000000,gen,5,splitter,pipe.out
     16.000000000,gen,5,splitter,resource.serve
-    16.000000000,gen,5,res1,pipe.default.in
-    18.000000000,gen,6,splitter,pipe.default.in
-    18.000000000,gen,6,splitter,pipe.default.out
+    16.000000000,gen,5,res1,pipe.in
+    18.000000000,gen,6,splitter,pipe.in
+    18.000000000,gen,6,splitter,pipe.out
     19.000000000,gen,6,splitter,resource.serve
-    19.000000000,gen,6,res0,pipe.default.in
-    19.000000000,gen,6,res0,pipe.default.out
+    19.000000000,gen,6,res0,pipe.in
+    19.000000000,gen,6,res0,pipe.out
     20.000000000,gen,3,res1,resource.serve
-    20.000000000,gen,5,res1,pipe.default.out
-    21.000000000,gen,7,splitter,pipe.default.in
+    20.000000000,gen,5,res1,pipe.out
+    21.000000000,gen,7,splitter,pipe.in
     21.000000000,gen,6,res0,resource.serve
-    21.000000000,gen,7,splitter,pipe.default.out
+    21.000000000,gen,7,splitter,pipe.out
     22.000000000,gen,7,splitter,resource.serve
-    22.000000000,gen,7,res1,pipe.default.in
-    24.000000000,gen,8,splitter,pipe.default.in
-    24.000000000,gen,8,splitter,pipe.default.out
+    22.000000000,gen,7,res1,pipe.in
+    24.000000000,gen,8,splitter,pipe.in
+    24.000000000,gen,8,splitter,pipe.out
     25.000000000,gen,8,splitter,resource.serve
-    25.000000000,gen,8,res0,pipe.default.in
-    25.000000000,gen,8,res0,pipe.default.out
-    27.000000000,gen,9,splitter,pipe.default.in
+    25.000000000,gen,8,res0,pipe.in
+    25.000000000,gen,8,res0,pipe.out
+    27.000000000,gen,9,splitter,pipe.in
     27.000000000,gen,8,res0,resource.serve
-    27.000000000,gen,9,splitter,pipe.default.out
+    27.000000000,gen,9,splitter,pipe.out
     28.000000000,gen,5,res1,resource.serve
     28.000000000,gen,9,splitter,resource.serve
-    28.000000000,gen,9,res1,pipe.default.in
-    28.000000000,gen,7,res1,pipe.default.out
+    28.000000000,gen,9,res1,pipe.in
+    28.000000000,gen,7,res1,pipe.out

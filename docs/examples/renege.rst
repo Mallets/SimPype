@@ -54,25 +54,25 @@ The scenario is so implemented with SimPype:
 .. code-block:: none
      
     timestamp,message,seq_num,resource,event
-    0.000000000,gen0,0,res0,pipe.default.in
-    0.000000000,gen0,0,res0,pipe.default.out
+    0.000000000,gen0,0,res0,pipe.in
+    0.000000000,gen0,0,res0,pipe.out
     0.253288390,gen0,0,res0,resource.serve
-    5.100301436,gen0,1,res0,pipe.default.in
-    5.100301436,gen0,1,res0,pipe.default.out
-    6.708421757,gen0,2,res0,pipe.default.in
+    5.100301436,gen0,1,res0,pipe.in
+    5.100301436,gen0,1,res0,pipe.out
+    6.708421757,gen0,2,res0,pipe.in
     7.626163293,gen0,1,res0,resource.serve
-    7.626163293,gen0,2,res0,pipe.default.out
-    13.376385121,gen0,3,res0,pipe.default.in
+    7.626163293,gen0,2,res0,pipe.out
+    13.376385121,gen0,3,res0,pipe.in
     15.126385121,gen0,3,res0,pipe.default.expired
     18.917893381,gen0,2,res0,resource.serve
-    24.512825619,gen0,4,res0,pipe.default.in
-    24.512825619,gen0,4,res0,pipe.default.out
-    24.967587642,gen0,5,res0,pipe.default.in
-    25.118838528,gen0,6,res0,pipe.default.in
-    26.352422007,gen0,7,res0,pipe.default.in
+    24.512825619,gen0,4,res0,pipe.in
+    24.512825619,gen0,4,res0,pipe.out
+    24.967587642,gen0,5,res0,pipe.in
+    25.118838528,gen0,6,res0,pipe.in
+    26.352422007,gen0,7,res0,pipe.in
     26.717587642,gen0,5,res0,pipe.default.expired
     26.868838528,gen0,6,res0,pipe.default.expired
     28.102422007,gen0,7,res0,pipe.default.expired
-    29.871999647,gen0,8,res0,pipe.default.in
+    29.871999647,gen0,8,res0,pipe.in
     29.993287213,gen0,4,res0,resource.serve
-    29.993287213,gen0,8,res0,pipe.default.out
+    29.993287213,gen0,8,res0,pipe.out

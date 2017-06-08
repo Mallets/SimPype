@@ -190,36 +190,36 @@ Moreover, ``next`` variable could also be set to a `pipeline` instead of a `reso
 .. code-block:: none
 
     timestamp,message,seq_num,resource,event
-    0.000000000,gen,0,splitter,pipe.default.in
-    0.000000000,gen,0,splitter,pipe.default.out
-    1.000000000,gen,1,splitter,pipe.default.in
+    0.000000000,gen,0,splitter,pipe.in
+    0.000000000,gen,0,splitter,pipe.out
+    1.000000000,gen,1,splitter,pipe.in
     1.000000000,gen,0,splitter,resource.serve
-    1.000000000,gen,0,res0,pipe.default.in
-    1.000000000,gen,0,res0,pipe.default.out
-    1.000000000,gen,1,splitter,pipe.default.out
+    1.000000000,gen,0,res0,pipe.in
+    1.000000000,gen,0,res0,pipe.out
+    1.000000000,gen,1,splitter,pipe.out
     1.000000000,gen,0,res0,resource.serve
-    2.000000000,gen,2,splitter,pipe.default.in
+    2.000000000,gen,2,splitter,pipe.in
     2.000000000,gen,1,splitter,resource.serve
-    2.000000000,gen,1,res1,pipe.default.in
-    2.000000000,gen,1,res1,pipe.default.out
-    2.000000000,gen,2,splitter,pipe.default.out
+    2.000000000,gen,1,res1,pipe.in
+    2.000000000,gen,1,res1,pipe.out
+    2.000000000,gen,2,splitter,pipe.out
     2.000000000,gen,1,res1,resource.serve
-    2.000000000,gen,1,res2,pipe.default.in
-    2.000000000,gen,1,res2,pipe.default.out
+    2.000000000,gen,1,res2,pipe.in
+    2.000000000,gen,1,res2,pipe.out
     2.000000000,gen,1,res2,resource.serve
-    3.000000000,gen,3,splitter,pipe.default.in
+    3.000000000,gen,3,splitter,pipe.in
     3.000000000,gen,2,splitter,resource.serve
-    3.000000000,gen,2,res0,pipe.default.in
-    3.000000000,gen,2,res0,pipe.default.out
-    3.000000000,gen,3,splitter,pipe.default.out
+    3.000000000,gen,2,res0,pipe.in
+    3.000000000,gen,2,res0,pipe.out
+    3.000000000,gen,3,splitter,pipe.out
     3.000000000,gen,2,res0,resource.serve
-    4.000000000,gen,4,splitter,pipe.default.in
+    4.000000000,gen,4,splitter,pipe.in
     4.000000000,gen,3,splitter,resource.serve
-    4.000000000,gen,3,res1,pipe.default.in
-    4.000000000,gen,3,res1,pipe.default.out
-    4.000000000,gen,4,splitter,pipe.default.out
+    4.000000000,gen,3,res1,pipe.in
+    4.000000000,gen,3,res1,pipe.out
+    4.000000000,gen,4,splitter,pipe.out
     4.000000000,gen,3,res1,resource.serve
-    4.000000000,gen,3,res2,pipe.default.in
-    4.000000000,gen,3,res2,pipe.default.out
+    4.000000000,gen,3,res2,pipe.in
+    4.000000000,gen,3,res2,pipe.out
     4.000000000,gen,3,res2,resource.serve
 

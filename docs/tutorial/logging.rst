@@ -31,26 +31,26 @@ structure in case of our simple simulation (see :ref:`simulation`):
 .. code-block:: none
 
     timestamp,message,seq_num,resource,event
-    0.000000000,gen0,0,res0,pipe.default.in
-    0.000000000,gen0,0,res0,pipe.default.out
+    0.000000000,gen0,0,res0,pipe.in
+    0.000000000,gen0,0,res0,pipe.out
     0.252555552,gen0,0,res0,resource.serve
-    0.722431377,gen0,1,res0,pipe.default.in
-    0.722431377,gen0,1,res0,pipe.default.out
+    0.722431377,gen0,1,res0,pipe.in
+    0.722431377,gen0,1,res0,pipe.out
     0.869881996,gen0,1,res0,resource.serve
-    1.413266674,gen0,2,res0,pipe.default.in
-    1.413266674,gen0,2,res0,pipe.default.out
+    1.413266674,gen0,2,res0,pipe.in
+    1.413266674,gen0,2,res0,pipe.out
     1.478382544,gen0,2,res0,resource.serve
-    2.833221707,gen0,3,res0,pipe.default.in
-    2.833221707,gen0,3,res0,pipe.default.out
+    2.833221707,gen0,3,res0,pipe.in
+    2.833221707,gen0,3,res0,pipe.out
     3.117096444,gen0,3,res0,resource.serve
-    3.455033536,gen0,4,res0,pipe.default.in
-    3.455033536,gen0,4,res0,pipe.default.out
-    4.174690658,gen0,5,res0,pipe.default.in
-    4.301555284,gen0,6,res0,pipe.default.in
+    3.455033536,gen0,4,res0,pipe.in
+    3.455033536,gen0,4,res0,pipe.out
+    4.174690658,gen0,5,res0,pipe.in
+    4.301555284,gen0,6,res0,pipe.in
     4.587560103,gen0,4,res0,resource.serve
-    4.587560103,gen0,5,res0,pipe.default.out
+    4.587560103,gen0,5,res0,pipe.out
     4.898210753,gen0,5,res0,resource.serve
-    4.898210753,gen0,6,res0,pipe.default.out
+    4.898210753,gen0,6,res0,pipe.out
     4.975600594,gen0,6,res0,resource.serve
 
 Let's analyze the first three log entries:
@@ -58,14 +58,14 @@ Let's analyze the first three log entries:
 .. code-block:: none
 
     timestamp,message,seq_num,resource,event
-    0.000000000,gen0,0,res0,pipe.default.in
+    0.000000000,gen0,0,res0,pipe.in
 
 1. A message with id ``gen0`` and sequence number ``0`` has been enqueued to the pipe of resource ``res0`` in the queue ``default`` at simulation time ``0.000000000``.
 
 .. code-block:: none
 
     timestamp,message,seq_num,resource,event
-    0.000000000,gen0,0,res0,pipe.default.out
+    0.000000000,gen0,0,res0,pipe.out
 
 2. The message with id ``gen0`` and sequence number ``0`` has been dequeued from the pipe of resource ``res0`` and queue ``default`` at simulation time ``0.000000000``. This means that the resource was available as soon as the message reached the resource. Therefore, the time spent waiting in the pipe was ``0``.
 
@@ -111,7 +111,7 @@ You can configure SimPype's logger to log any additional message properties as y
 .. code-block:: none
 
     timestamp,message,seq_num,resource,event,test
-    0.000000000,gen0,0,res0,pipe.default.in,1
+    0.000000000,gen0,0,res0,pipe.in,1
 
 If a message does not have the custom property, SimPype logs ``NA`` instead.
 
