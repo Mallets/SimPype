@@ -3,12 +3,18 @@ import random
 
 
 # [Mandatory] Create a SimPype simulation object
-sim = simpype.Simulation(id = 'preemption_restart')
+sim = simpype.Simulation(id = 'preemption_norestart')
 # [Optional] Fix the seed used by the pseudo-random generator
 sim.seed = 42
+# [Optional] Configure the log directory. 
+# [Default] Log are store by default in the 'current working directory/log'
+sim.log.dir = 'log'
+# [Optional] Disable the logging to file and print to console instead
+#sim.log.file = False
+#sim.log.print = True
 # [Optional] Configure the path containting the models for the simulation. 
 # [Default] Current working directory
-sim.model.dir = 'examples/model'
+sim.model.dir = '../model'
 
 # Create a generator
 gen0 = sim.add_generator(id = 'gen0')
@@ -22,10 +28,10 @@ gen1.random['arrival'] = {0: lambda: random.expovariate(1.0/60)}
 gen1.message.property['priority'] = 1
 
 # Add a resource
-res0 = sim.add_resource(id = 'res0', pipe = 'p_preemption')
+res0 = sim.add_resource(id = 'res0', model = 'r_preemption', pipe = 'p_preemption')
 res0.random['service'] = {0: lambda: random.expovariate(1.0/90)}
 
-# Add a pipiline connecting the generator to the resource
+# Add a pipeline connecting the generator to the resource
 p0 = sim.add_pipeline(gen0, res0)
 p1 = sim.add_pipeline(gen1, res0)
 

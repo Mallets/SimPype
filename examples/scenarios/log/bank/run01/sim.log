@@ -1,0 +1,13 @@
+timestamp,message,seq_num,resource,event
+0.000000000,customer,0,counter,pipe.in
+0.000000000,customer,0,counter,pipe.out
+3.031034228,customer,0,counter,resource.serve
+3.216240641,customer,1,counter,pipe.in
+3.216240641,customer,1,counter,pipe.out
+14.507970729,customer,2,counter,pipe.in
+15.681848394,customer,2,counter,pipe.default.expired
+19.988432323,customer,3,counter,pipe.in
+21.048026762,customer,3,counter,pipe.default.expired
+22.455599282,customer,4,counter,pipe.in
+24.466309859,customer,4,counter,pipe.default.expired
+29.943697835,customer,1,counter,resource.serve

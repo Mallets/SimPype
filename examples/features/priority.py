@@ -6,9 +6,15 @@ import random
 sim = simpype.Simulation(id = 'priority')
 # [Optional] Fix the seed used by the pseudo-random generator
 sim.seed = 42
+# [Optional] Configure the log directory. 
+# [Default] Log are store by default in the 'current working directory/log'
+sim.log.dir = 'log'
+# [Optional] Disable the logging to file and print to console instead
+#sim.log.file = False
+#sim.log.print = True
 # [Optional] Configure the path containting the models for the simulation. 
 # [Default] Current working directory
-sim.model.dir = 'examples/model'
+sim.model.dir = '../model'
 
 # Create a generator
 gen0 = sim.add_generator(id = 'gen0')

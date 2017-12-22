@@ -4,14 +4,15 @@ import simpype
 import random
 
 # [Mandatory] Create a SimPype simulation object
-sim = simpype.Simulation(id = 'simple')
+sim = simpype.Simulation(id = 'arrival_service')
 # [Optional] Fix the seed for the pseudo-random generator
 sim.seed = 42
 # [Optional] Configure the log directory. 
 # [Default] Log are store by default in the 'current working directory/log'
-sim.log.dir = 'mylog'
-sim.log.file = False
-sim.log.print = True
+sim.log.dir = 'log'
+# [Optional] Disable the logging to file and print to console instead
+#sim.log.file = False
+#sim.log.print = True
 
 # [Mandatory] Add at least one generator to the simulation
 gen0 = sim.add_generator(id = 'gen0')
@@ -24,7 +25,8 @@ gen0 = sim.add_generator(id = 'gen0')
 # Random values can be generated in the following way:
 # 	generator.random[<some_id>].value
 # The random value is:
-# 	<value>/<random_function> the simulation time is equal or greater than (>=) <initial_time>, 0 otherwise
+# 	<value>/<random_function> the simulation time is equal or 
+# 		greater than (>=) <initial_time>, 0 otherwise
 gen0.random['arrival'] = {
 	# From t=0 to t=10, arrival is constant every 3s
 	0	: lambda: 3.0,
