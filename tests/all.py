@@ -26,10 +26,13 @@ res00.random['service'] = simpype.random.Random(sim, {0: lambda: 1.0})
 p00 = sim.add_pipeline(gen00, res00)
 
 # Add generator with custom model
-gen01 = sim.add_generator(id = 'gen03', model = 'r_generator')
-#
+gen03 = sim.add_generator(id = 'gen03', model = 'r_generator')
+gen03.random['arrival'] = {0: lambda: 1.0}
 # Set message lifetime
-gen01.message.property['lifetime'] = {0: lambda: 10.0}
+gen03.message.property['lifetime'] = {0: lambda: 10.0}
+res03 = sim.add_resource(id = 'res03')
+res03.random['service'] = {0: lambda: 1.0}
+p03 = sim.add_pipeline(gen03, res03)
 
 ## Automatic copy of the message
 # Gen04 |-> Res04a
@@ -162,12 +165,17 @@ def clock():
 sim.env.process(clock())
 
 # Gen11 -> Res11
-gen11 = sim.add_generator(id = 'gen11')
-gen11.random['arrival'] = {0: lambda: 1.0}
-gen11.message.property['priority'] = {0: lambda: random.randint(0,4)}
+gen11a = sim.add_generator(id = 'first')
+gen11a.random['arrival'] = {0: lambda: 1.0}
+gen11b = sim.add_generator(id = 'business')
+gen11b.random['arrival'] = {0: lambda: 1.0}
+gen11c = sim.add_generator(id = 'economy')
+gen11c.random['arrival'] = {0: lambda: 1.0}
 res11 = sim.add_resource(id = 'res11', pipe = 'p_priority')
 res11.random['service'] = {0: lambda: 1.0}
-p11 = sim.add_pipeline(gen11, res11)
+p11a = sim.add_pipeline(gen11a, res11)
+p11b = sim.add_pipeline(gen11b, res11)
+p11c = sim.add_pipeline(gen11c, res11)
 
 # Gen12 -> Res12
 gen12 = sim.add_generator(id = 'gen12')
