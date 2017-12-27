@@ -166,9 +166,9 @@ sim.env.process(clock())
 
 # Gen11 -> Res11
 gen11a = sim.add_generator(id = 'first')
-gen11a.random['arrival'] = {0: lambda: 1.0}
+gen11a.random['arrival'] = {0: lambda: 5.0}
 gen11b = sim.add_generator(id = 'business')
-gen11b.random['arrival'] = {0: lambda: 1.0}
+gen11b.random['arrival'] = {0: lambda: 2.0}
 gen11c = sim.add_generator(id = 'economy')
 gen11c.random['arrival'] = {0: lambda: 1.0}
 res11 = sim.add_resource(id = 'res11', pipe = 'p_priority')
