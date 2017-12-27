@@ -19,22 +19,19 @@ gen00.random['arrival'] = {0: lambda: 1.0}
 
 # Add resource
 res00 = sim.add_resource(id = 'res00')
-# Set service time
-res00.random['service'] = {0: lambda: 1.0}
+# Create random dictionary and set service time
+res00.random['service'] = simpype.random.Random(sim, {0: lambda: 1.0})
 
 # Add pipeline
 p00 = sim.add_pipeline(gen00, res00)
 
-# Create random dictionary
-simpype.random.Random(sim, {0: lambda: 1.0})
-
 # Add generator with custom model
 gen01 = sim.add_generator(id = 'gen03', model = 'r_generator')
-
+#
 # Set message lifetime
 gen01.message.property['lifetime'] = {0: lambda: 10.0}
 
-# Automatic copy of the message
+## Automatic copy of the message
 # Gen04 |-> Res04a
 #       |-> Res04b
 gen04 = sim.add_generator(id = 'gen04')
@@ -77,7 +74,15 @@ p06 = sim.add_pipeline(gen06, res06)
 
 # Gen07 -> Res07
 gen07 = sim.add_generator(id = 'gen07')
-gen07.random['arrival'] = {0: lambda: 1.0}
+gen07.random['arrival'] = {
+	2: lambda: 1.0,
+	11: lambda: None,
+	12: lambda: None,
+	13: lambda: None,
+	14: lambda: 1.0,
+	45: lambda: None,
+	56: lambda: None,
+}
 gen07.message.property['property'] = {0: lambda: random.randint(0,4)}
 res07 = sim.add_resource(id = 'res07', pipe = 'p_priority')
 res07.random['service'] = {0: lambda: 1.0}
