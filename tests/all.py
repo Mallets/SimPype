@@ -26,6 +26,17 @@ res00.random['service'] = simpype.random.Random(sim, {0: lambda: 1.0})
 p00 = sim.add_pipeline(gen00, res00)
 
 # Add generator with custom model
+gen02 = sim.add_generator(id = 'gen02', model = 'r_generator')
+gen02.random['arrival'] = {
+	0: lambda: 1.0,
+	5: lambda: None
+}
+# Set message lifetime
+res02 = sim.add_resource(id = 'res02')
+res02.random['service'] = {0: lambda: 1.0}
+p02 = sim.add_pipeline(gen02, res02)
+
+# Add generator with custom model
 gen03 = sim.add_generator(id = 'gen03', model = 'r_generator')
 gen03.random['arrival'] = {0: lambda: 1.0}
 # Set message lifetime
