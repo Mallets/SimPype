@@ -58,10 +58,10 @@ To generate a random value:
 
 As you can see, depending on the current simulation ``myrand.value`` returns a random value according to a different random distribution.
 
-Generator initial and arrival time
-==================================
+Generator arrival time
+======================
 
-The initial and arrival time of a generator is described with a :class:`~simpype.random.Random` variable.
+The arrival time of a generator is described with a :class:`~simpype.random.Random` variable.
 
 .. code-block:: python
 
@@ -71,9 +71,6 @@ The initial and arrival time of a generator is described with a :class:`~simpype
     sim = simpype.Simulation(id = 'simple')
     gen0 = sim.add_generator(id = 'gen0')
     # Start generating events at a random simulation time
-    gen0.random['initial'] = {
-        0: lambda: random.uniform(0,1)
-    }
     gen0.random['arrival'] = {
 		# From t=0 to t=10, the arrival time is constant to 3.0
 		0	: lambda: 3.0,

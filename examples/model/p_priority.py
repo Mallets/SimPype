@@ -7,7 +7,6 @@ class Priority(simpype.pipe.Pipe):
 		self.add_queue(id = 'express')
 		self.add_queue(id = 'fast')
 		self.add_queue(id = 'slow')
-		self.add_queue(id = 'background')
 
 	@simpype.pipe.dequeue
 	def dequeue(self):
@@ -15,27 +14,20 @@ class Priority(simpype.pipe.Pipe):
 			m = self.queue['express'].pop()
 		elif len(self.queue['fast']) > 0:
 			m = self.queue['fast'].pop()
-		elif len(self.queue['slow']) > 0:
-			m = self.queue['slow'].pop()
 		else:
-			m = self.queue['background'].pop()
+			m = self.queue['slow'].pop()
 		return m
 
 	@simpype.pipe.enqueue
 	def enqueue(self, message):
-		if 'priority' not in message.property:
-			message.property['priority'] = 0
-
-		if message.property['priority'].value == 3:
+		if message.id == 'first':
 			m = self.queue['express'].push(message)
-		elif message.property['priority'].value == 2:
+		elif message.id == 'business':
 			m = self.queue['fast'].push(message)
-		elif message.property['priority'].value == 1:
+		elif message.id == 'economy':
 			m = self.queue['slow'].push(message)
-		elif message.property['priority'].value == 0:
-			m = self.queue['background'].push(message)
 		else:
-			m = self.queue['background'].push(message)
+			m = self.queue['slow'].push(message)
 		return m
 
 

@@ -31,6 +31,25 @@ An example of random dictionary initialization is the following:
 		20	: lambda: random.expovariate(0.20)
 	})
 
+A second example of random dictionary with generation interrupts is the following:
+
+.. code-block :: python
+
+	sim = simpype.Simulation(id = 'test')
+	myrand = simpype.Random(sim, {
+		# From t=0 to t=10, the random variable returns 
+		# the constant value of 3.0 after time 10.
+		# From time 0 to 10, no random variable is generated
+		10	: lambda: 3.0,
+		# From t=10 to t=20, no random variable is generated
+		10	: lambda: None,
+		# From t=20 to t=30, the random variable returns 
+		# a value exponentially distributed with lambda 0.20
+		20	: lambda: random.expovariate(0.20)
+		# From t=30 to t=inf, no random variable is generated
+		30	: lambda: None
+	})
+
 Produce a random value:
 
 .. code-block :: python
@@ -80,15 +99,56 @@ class Random:
 		assert isinstance(sim, simpype.Simulation)
 		self.sim = sim
 		self.env = sim.env
-		self.step_dict = step_dict
+		self.step_dict = {}
 		self.step_list = []
-		# Init		
-		time_step = sorted(step_dict) + [float("inf")]
-		if time_step[0] != 0:
-			time_step = [0] + time_step
-			step_dict[0] = lambda: 0
-		for i in range(0, len(time_step)-1):
-			self.step_list.append(self.Step(time_step[i], time_step[i+1], step_dict[time_step[i]]))
+		# Init	
+		for v in step_dict.values():
+			assert callable(v)
+
+		if 0 not in step_dict:
+			step_dict[0] = lambda: None
+		step_dict[float("inf")] = lambda: None
+		time_step = sorted(step_dict)
+
+		# Parse and build the steps
+		i = 0
+		while i < len(time_step)-1:
+			tfrom = time_step[i]
+
+			j = i+1
+			while j < len(time_step):
+				tto = time_step[j]
+				a = step_dict[time_step[i]]
+				b = step_dict[time_step[j]]
+
+				create = True
+				if a() is not None:
+					process = a
+					create = True
+					# break
+					i = i+1
+					j = float("inf")
+				elif a() is None and b() is not None:
+					wait = (tto - tfrom) + b()
+					process = lambda: wait
+					create = True
+					# break
+					i = j
+					j = float("inf")
+				elif a() is None and b() is None:
+					if j == len(time_step) - 1:
+						process = b
+						create = True
+						# break
+						i = float("inf")
+						j = float("inf")
+					else:
+						j = j+1
+					
+				if create:
+					s = self.Step(tfrom, tto, process)
+					self.step_list.append(s)
+					self.step_dict[s.tfrom] = s
 
 	@property
 	def value(self):
