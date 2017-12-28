@@ -10,6 +10,10 @@
 .. image:: https://readthedocs.org/projects/simpype/badge/?version=latest
     :target: http://simpype.readthedocs.io/en/latest/?badge=latest
 
+.. figure:: _static/simpype_transparent.png
+    :align: center
+    :figwidth: 80 %
+
 
 ========
 Overview
