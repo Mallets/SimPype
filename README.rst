@@ -10,7 +10,7 @@
 .. image:: https://readthedocs.org/projects/simpype/badge/?version=latest
     :target: http://simpype.readthedocs.io/en/latest/?badge=latest
 
-.. figure:: _static/simpype_transparent.png
+.. figure:: https://raw.githubusercontent.com/Mallets/SimPype/master/docs/_static/simpype_transparent.png
     :align: center
     :figwidth: 80 %
 
