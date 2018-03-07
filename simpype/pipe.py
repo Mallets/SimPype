@@ -170,8 +170,9 @@ class Pipe:
 		while True:
 			yield self.resource.free & self.available
 			self.available = self.env.event()
-			if len(self.resource.task)+1 >= self.resource.capacity:
-				self.resource.free = self.env.event()
+			if self.resource.free.triggered and \
+				len(self.resource.task)+1 >= self.resource.capacity:
+					self.resource.free = self.env.event()
 			message = yield self.env.process(self.dequeue())
 			if isinstance(message, simpype.Message):
 				self.env.process(self._service(message))
@@ -179,8 +180,9 @@ class Pipe:
 
 	def _service(self, message):
 		yield self.env.process(self.resource.service(message))
-		if len(self.resource.task) < self.resource.capacity:
-			self.resource.free.succeed()
+		if not self.resource.free.triggered and \
+			len(self.resource.task) < self.resource.capacity:
+				self.resource.free.succeed()
 
 
 	def add_queue(self, id, model = None):
