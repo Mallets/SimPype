@@ -168,13 +168,20 @@ class Pipe:
 
 	def _wait_loop(self):
 		while True:
-			with self.resource.use.request() as request:
-				yield request & self.available
-				self.available = self.env.event()
-				message = yield self.env.process(self.dequeue())
-				if isinstance(message, simpype.Message):
-					yield self.env.process(self.resource.service(message))
-				self.full()
+			yield self.resource.free & self.available
+			self.available = self.env.event()
+			if len(self.resource.task)+1 >= self.resource.capacity:
+				self.resource.free = self.env.event()
+			message = yield self.env.process(self.dequeue())
+			if isinstance(message, simpype.Message):
+				self.env.process(self._service(message))
+			self.full()
+
+	def _service(self, message):
+		yield self.env.process(self.resource.service(message))
+		if len(self.resource.task) < self.resource.capacity:
+			self.resource.free.succeed()
+
 
 	def add_queue(self, id, model = None):
 		""" Add a new queue to the pipe.
