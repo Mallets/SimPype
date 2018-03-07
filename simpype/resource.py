@@ -42,15 +42,14 @@ def __service(func, resource, message):
 	assert isinstance(message, simpype.Message)
 	message.location = resource
 	if inspect.isgeneratorfunction(func):
-		mid = str(message.id)+str(message.seq_num)
 		a_serve = resource.env.process(func(resource, message))
-		resource.task[mid] = Task(message.sim, message, a_serve)
+		task = resource.add_task(message, a_serve)
 		try:
 			yield a_serve
 			message.timestamp('resource.serve')
 		except simpy.Interrupt as interrupt:
 			message.timestamp('resource.'+str(interrupt.cause))
-		del resource.task[mid]
+		resource.del_task(task)
 	else:
 		func(resource, message)
 		message.timestamp('resource.serve')
@@ -135,6 +134,8 @@ class Task:
 	"""
 	def __init__(self, sim, message, process):
 		assert isinstance(sim, simpype.Simulation)
+		assert isinstance(message, simpype.Message)
+		self.id = str(message.id)+str(message.seq_num)
 		self.sim = sim
 		self.env = sim.env
 		self.message = message
@@ -182,17 +183,29 @@ class Resource:
 		self.sim = sim
 		self.env = sim.env
 		self.id = id
-		self.use = simpy.Resource(self.env, capacity = capacity)
+		self.capacity = capacity
+		self.free = self.env.event().succeed()
 		self.pipe = simpype.build.pipe(self.sim, self, self.id, pipe)
 		self.random = simpype.random.RandomDict(self.sim)
+		self.blocking = True
 		self.task = {}
 
 	def _message_dropped(self, message, cause):
 		assert isinstance(message, simpype.Message)
 		assert message.location == self
-		mid = message.id+str(message.seq_num)
-		assert mid in self.task
-		self.task[mid].interrupt(cause = cause)
+		tid = str(message.id)+str(message.seq_num)
+		assert tid in self.task
+		self.task[tid].interrupt(cause = cause)
+
+
+	def add_task(self, message, process):
+		t = Task(self.sim, message, process)
+		self.task[t.id] = t
+		return t
+
+	def del_task(self, task):
+		assert task.id in self.task
+		del self.task[task.id]
 
 	def send(self, message):
 		""" Send a :class:`~simpype.message.Message`.
