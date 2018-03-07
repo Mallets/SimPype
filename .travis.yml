@@ -9,12 +9,12 @@ install:
   - pip install simpy
   - pip install codecov
 script:
-  - python3 examples/basic.py
-  - python3 examples/preemption_norestart.py
-  - python3 examples/preemption_restart.py
-  - python3 examples/priority.py
-  - python3 examples/renege.py
-  - python3 examples/splitter.py
+  - python3 examples/bank.py
+  - python3 examples/boarding.py
+  - python3 examples/fish.py
+  - python3 examples/pallet_norestart.py
+  - python3 examples/pallet_restart.py
+  - python3 examples/supermarket.py
   - coverage run tests/all.py
 after_success:
   - codecov

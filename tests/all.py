@@ -1,44 +1,51 @@
 import simpype
 import random
 
-
+# Create simulation environment
 sim = simpype.Simulation(id = 'test')
+# Set the pseudo-random number generator seed
 sim.seed = 42
+# Set the log dir
 sim.log.dir = '/tmp/log'
+# Set the model directory
 sim.model.dir = 'examples/model'
+# Log custom message property
 sim.log.property('items')
-sim.log.property('priority')
 
-# Gen00 -> Res00
+# Add generator 
 gen00 = sim.add_generator(id = 'gen00')
+# Set arrival time
 gen00.random['arrival'] = {0: lambda: 1.0}
+
+# Add resource
 res00 = sim.add_resource(id = 'res00')
-res00.random['service'] = {0: lambda: 1.0}
+# Create random dictionary and set service time
+res00.random['service'] = simpype.random.Random(sim, {0: lambda: 1.0})
+
+# Add pipeline
 p00 = sim.add_pipeline(gen00, res00)
 
-# Gen01 -> Res01
-gen01 = sim.add_generator(id = 'gen01')
-gen01.random['arrival'] = simpype.random.Random(sim, {0: lambda: 1.0})
-res01 = sim.add_resource(id = 'res01')
-res01.random['service'] = {0: lambda: 1.0}
-p01 = sim.add_pipeline(gen01, res01)
-
-# Gen02 -> Res02
-gen02 = sim.add_generator(id = 'gen02')
-gen02.random['initial'] = {0: lambda: 1.0}
-gen02.random['arrival'] = {0: lambda: 1.0}
+# Add generator with custom model
+gen02 = sim.add_generator(id = 'gen02', model = 'r_generator')
+gen02.random['arrival'] = {
+	0: lambda: 1.0,
+	5: lambda: None
+}
+# Set message lifetime
 res02 = sim.add_resource(id = 'res02')
 res02.random['service'] = {0: lambda: 1.0}
 p02 = sim.add_pipeline(gen02, res02)
 
-# Gen03 -> Res03
+# Add generator with custom model
 gen03 = sim.add_generator(id = 'gen03', model = 'r_generator')
 gen03.random['arrival'] = {0: lambda: 1.0}
+# Set message lifetime
 gen03.message.property['lifetime'] = {0: lambda: 10.0}
 res03 = sim.add_resource(id = 'res03')
 res03.random['service'] = {0: lambda: 1.0}
 p03 = sim.add_pipeline(gen03, res03)
 
+## Automatic copy of the message
 # Gen04 |-> Res04a
 #       |-> Res04b
 gen04 = sim.add_generator(id = 'gen04')
@@ -52,6 +59,7 @@ p04a = sim.add_pipeline(gen04, res04a)
 p04b = sim.add_pipeline(gen04, res04b)
 p04 = sim.merge_pipeline(p04a, p04b)
 
+# Lifetime expire
 # Gen05a |-> Res05
 # Gen05b |
 gen05a = sim.add_generator(id = 'gen05a')
@@ -80,7 +88,15 @@ p06 = sim.add_pipeline(gen06, res06)
 
 # Gen07 -> Res07
 gen07 = sim.add_generator(id = 'gen07')
-gen07.random['arrival'] = {0: lambda: 1.0}
+gen07.random['arrival'] = {
+	2: lambda: 1.0,
+	11: lambda: None,
+	12: lambda: None,
+	13: lambda: None,
+	14: lambda: 1.0,
+	45: lambda: None,
+	56: lambda: None,
+}
 gen07.message.property['property'] = {0: lambda: random.randint(0,4)}
 res07 = sim.add_resource(id = 'res07', pipe = 'p_priority')
 res07.random['service'] = {0: lambda: 1.0}
@@ -160,12 +176,17 @@ def clock():
 sim.env.process(clock())
 
 # Gen11 -> Res11
-gen11 = sim.add_generator(id = 'gen11')
-gen11.random['arrival'] = {0: lambda: 1.0}
-gen11.message.property['priority'] = {0: lambda: random.randint(0,4)}
+gen11a = sim.add_generator(id = 'first')
+gen11a.random['arrival'] = {0: lambda: 5.0}
+gen11b = sim.add_generator(id = 'business')
+gen11b.random['arrival'] = {0: lambda: 2.0}
+gen11c = sim.add_generator(id = 'economy')
+gen11c.random['arrival'] = {0: lambda: 1.0}
 res11 = sim.add_resource(id = 'res11', pipe = 'p_priority')
 res11.random['service'] = {0: lambda: 1.0}
-p11 = sim.add_pipeline(gen11, res11)
+p11a = sim.add_pipeline(gen11a, res11)
+p11b = sim.add_pipeline(gen11b, res11)
+p11c = sim.add_pipeline(gen11c, res11)
 
 # Gen12 -> Res12
 gen12 = sim.add_generator(id = 'gen12')
@@ -304,48 +325,6 @@ res20 = sim.add_resource(id = 'res20', pipe = 'p_roundrobin')
 res20.random['service'] = {0: lambda: 1.0}
 p20a = sim.add_pipeline(gen20a, res20)
 p20b = sim.add_pipeline(gen20b, res20)
-
-# Gen21a |-> Res21
-# Gen21b |
-# Gen21c |
-gen21a = sim.add_generator(id = 'gen21a')
-gen21a.random['arrival'] = {0: lambda: 11.0}
-gen21a.message.property['priority'] = 0
-gen21b = sim.add_generator(id = 'gen21b')
-gen21b.random['arrival'] = {0: lambda: 2.5}
-gen21b.message.property['priority'] = 1
-gen21c = sim.add_generator(id = 'gen21c')
-gen21c.random['arrival'] = {0: lambda: 4.0}
-gen21c.message.property['priority'] = {0: lambda: random.randint(2,4)}
-gen21d = sim.add_generator(id = 'gen21d')
-gen21d.random['arrival'] = {0: lambda: 4.0}
-res21 = sim.add_resource(id = 'res21', model = 'r_preemption', pipe = 'p_preemption')
-res21.random['service'] = {0: lambda: 1.0}
-p21a = sim.add_pipeline(gen21a, res21)
-p21b = sim.add_pipeline(gen21b, res21)
-p21c = sim.add_pipeline(gen21c, res21)
-p21d = sim.add_pipeline(gen21d, res21)
-
-# Gen22a |-> Res22
-# Gen22b |
-# Gen22c |
-gen22a = sim.add_generator(id = 'gen22a')
-gen22a.random['arrival'] = {0: lambda: 11.0}
-gen22a.message.property['priority'] = 0
-gen22b = sim.add_generator(id = 'gen22b')
-gen22b.random['arrival'] = {0: lambda: 2.5}
-gen22b.message.property['priority'] = 1
-gen22c = sim.add_generator(id = 'gen22c')
-gen22c.random['arrival'] = {0: lambda: 4.0}
-gen22c.message.property['priority'] = {0: lambda: random.randint(2,4)}
-gen22d = sim.add_generator(id = 'gen22d')
-gen22d.random['arrival'] = {0: lambda: 4.0}
-res22 = sim.add_resource(id = 'res22', pipe = 'p_preemption')
-res22.random['service'] = {0: lambda: 1.0}
-p22a = sim.add_pipeline(gen22a, res22)
-p22b = sim.add_pipeline(gen22b, res22)
-p22c = sim.add_pipeline(gen22c, res22)
-p22d = sim.add_pipeline(gen22d, res22)
 
 sim.log.file = True
 sim.log.print = False
