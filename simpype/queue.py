@@ -153,6 +153,7 @@ class Queue:
 		self.env = sim.env
 		self.id = id
 		self.pipe = pipe
+		self.log = True
 		self.buffer = []
 		self.capacity = float('inf')
 		self.active = self.env.event().succeed()

@@ -183,11 +183,11 @@ class Resource:
 		self.sim = sim
 		self.env = sim.env
 		self.id = id
+		self.log = True
 		self.capacity = capacity
-		self.free = self.env.event().succeed()
+		self.available = self.env.event().succeed()
 		self.pipe = simpype.build.pipe(self.sim, self, self.id, pipe)
 		self.random = simpype.random.RandomDict(self.sim)
-		self.blocking = True
 		self.task = {}
 
 	def _message_dropped(self, message, cause):
@@ -197,6 +197,13 @@ class Resource:
 		assert tid in self.task
 		self.task[tid].interrupt(cause = cause)
 
+	def free(self):
+		if self.available.triggered:
+			if len(self.task)+1 >= self.capacity:
+				self.available = self.env.event()
+		else:
+			if len(self.task) < self.capacity:
+				self.available.succeed()
 
 	def add_task(self, message, process):
 		t = Task(self.sim, message, process)

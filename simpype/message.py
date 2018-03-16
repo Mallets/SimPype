@@ -241,6 +241,7 @@ class Message:
 		self.generated = self.env.now
 		self.generator = resource
 		self.is_alive = True
+		self.log = True
 		self.location = resource
 		self.property = PropertyDict(self.sim)
 		self.seq_num = 0
@@ -337,6 +338,7 @@ class Message:
 		message.seq_num = copy.deepcopy(self.seq_num)
 		message.visited = copy.copy(self.visited)
 		message.is_alive = copy.deepcopy(self.is_alive)
+		message.log = copy.deepcopy(self.log)
 		message.next = copy.copy(self.next)
 		message.pipeline = copy.copy(self.pipeline)
 		for p in self.property.values():
@@ -405,7 +407,8 @@ class Message:
 		
 		"""
 		ts = Timestamp(self, self.env.now, self.resource, description)
-		self.sim.log.write(ts)
+		if self.log and self.location.log:
+			self.sim.log.write(ts)
 		return ts
 
 	def unsubscribe(self, id):

@@ -156,6 +156,7 @@ class Pipe:
 		self.sim = sim
 		self.env = sim.env
 		self.id = id
+		self.log = True
 		self.resource = resource
 		self.available = self.env.event()
 		self.queue = {}
@@ -168,11 +169,9 @@ class Pipe:
 
 	def _wait_loop(self):
 		while True:
-			yield self.resource.free & self.available
+			yield self.resource.available & self.available
 			self.available = self.env.event()
-			if self.resource.free.triggered and \
-				len(self.resource.task)+1 >= self.resource.capacity:
-					self.resource.free = self.env.event()
+			self.resource.free()
 			message = yield self.env.process(self.dequeue())
 			if isinstance(message, simpype.Message):
 				self.env.process(self._service(message))
@@ -180,10 +179,7 @@ class Pipe:
 
 	def _service(self, message):
 		yield self.env.process(self.resource.service(message))
-		if not self.resource.free.triggered and \
-			len(self.resource.task) < self.resource.capacity:
-				self.resource.free.succeed()
-
+		self.resource.free()
 
 	def add_queue(self, id, model = None):
 		""" Add a new queue to the pipe.

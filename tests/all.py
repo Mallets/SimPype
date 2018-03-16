@@ -326,6 +326,28 @@ res20.random['service'] = {0: lambda: 1.0}
 p20a = sim.add_pipeline(gen20a, res20)
 p20b = sim.add_pipeline(gen20b, res20)
 
+# Gen21 |-> Res21
+gen21 = sim.add_generator(id = 'gen21')
+gen21.random['arrival'] = {0: lambda: 1.0}
+gen21.message.log = False
+res21 = sim.add_resource(id = 'res21')
+p21 = sim.add_pipeline(gen21, res21)
+
+# Gen22 |-> Res22
+gen22 = sim.add_generator(id = 'gen22')
+gen22.random['arrival'] = {0: lambda: 1.0}
+res22 = sim.add_resource(id = 'res22')
+res22.pipe.log = False
+p22 = sim.add_pipeline(gen22, res22)
+
+# Gen23 |-> Res23
+gen23 = sim.add_generator(id = 'gen23')
+gen23.random['arrival'] = {0: lambda: 1.0}
+res23 = sim.add_resource(id = 'res23')
+res23.pipe.log = False
+res23.pipe.queue['default'].log = False
+p23 = sim.add_pipeline(gen23, res23)
+
 sim.log.file = True
 sim.log.print = False
 sim.run(until = 30)
