@@ -153,10 +153,19 @@ class Queue:
 		self.env = sim.env
 		self.id = id
 		self.pipe = pipe
-		self.log = True
 		self.buffer = []
 		self.capacity = float('inf')
+		self.log = True
 		self.active = self.env.event().succeed()
+
+	@property
+	def log(self):
+		return self._log
+
+	@log.setter
+	def log(self, value):
+		assert isinstance(value, bool)
+		self._log = value
 
 	def _message_dropped(self, message, cause):
 		assert isinstance(message, simpype.Message)

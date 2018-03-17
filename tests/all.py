@@ -337,7 +337,7 @@ p21 = sim.add_pipeline(gen21, res21)
 gen22 = sim.add_generator(id = 'gen22')
 gen22.random['arrival'] = {0: lambda: 1.0}
 res22 = sim.add_resource(id = 'res22')
-res22.pipe.log = False
+res22.log = False
 p22 = sim.add_pipeline(gen22, res22)
 
 # Gen23 |-> Res23
@@ -345,8 +345,14 @@ gen23 = sim.add_generator(id = 'gen23')
 gen23.random['arrival'] = {0: lambda: 1.0}
 res23 = sim.add_resource(id = 'res23')
 res23.pipe.log = False
-res23.pipe.queue['default'].log = False
 p23 = sim.add_pipeline(gen23, res23)
+
+# Gen24 |-> Res24
+gen24 = sim.add_generator(id = 'gen24')
+gen24.random['arrival'] = {0: lambda: 1.0}
+res24 = sim.add_resource(id = 'res24')
+res24.pipe.queue['default'].log = False
+p24 = sim.add_pipeline(gen24, res24)
 
 sim.log.file = True
 sim.log.print = False

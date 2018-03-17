@@ -183,12 +183,22 @@ class Resource:
 		self.sim = sim
 		self.env = sim.env
 		self.id = id
-		self.log = True
 		self.capacity = capacity
 		self.available = self.env.event().succeed()
 		self.pipe = simpype.build.pipe(self.sim, self, self.id, pipe)
 		self.random = simpype.random.RandomDict(self.sim)
 		self.task = {}
+		self.log = True
+
+	@property
+	def log(self):
+		return self._log
+
+	@log.setter
+	def log(self, value):
+		assert isinstance(value, bool)
+		self._log = value
+		self.pipe.log = value
 
 	def _message_dropped(self, message, cause):
 		assert isinstance(message, simpype.Message)

@@ -156,12 +156,24 @@ class Pipe:
 		self.sim = sim
 		self.env = sim.env
 		self.id = id
-		self.log = True
 		self.resource = resource
 		self.available = self.env.event()
 		self.queue = {}
+		self.log = True
 		# Init
 		self.a_wait_loop = self.env.process(self._wait_loop())
+
+	@property
+	def log(self):
+		return self._log
+
+	@log.setter
+	def log(self, value):
+		assert isinstance(value, bool)
+		self._log = value
+		for q in self.queue.values():
+			q.log = value
+
 
 	def _message_dropped(self, message, cause):
 		assert isinstance(message, simpype.Message)
