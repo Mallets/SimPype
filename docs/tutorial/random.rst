@@ -83,6 +83,33 @@ The arrival time of a generator is described with a :class:`~simpype.random.Rand
 Please note that in this case there is no need of calling the ``simpype.Random`` constructor.
 The generator object automatically converts the dictionary into a :class:`~simpype.random.Random` object.
 
+Generation of more than one message at once
+===========================================
+
+The number of messages to be generated at any arrival time is described with a :class:`~simpype.random.Random` variable.
+
+.. code-block:: python
+
+    import simpype
+    import random
+
+    sim = simpype.Simulation(id = 'simple')
+    gen0 = sim.add_generator(id = 'gen0')
+    # Arrival time of 1 second
+    gen0.random['arrival'] = {0: lambda: 1}
+    # Start generating events at a random simulation time
+    gen0.random['quantity'] = {
+		# From t=0 to t=10, 3 messages are generated at once
+		0	: lambda: 3,
+		# From t=10 to t=20, a random number of messages (between 1 and 10) is generated at once
+		10	: lambda: random.randint(1, 10),
+		# From t=20 to t=inf, 1 message is generated everytime
+		20	: lambda: 1
+    }
+
+Please note that in this case there is no need of calling the ``simpype.Random`` constructor.
+The generator object automatically converts the dictionary into a :class:`~simpype.random.Random` object.
+
 Resource service time
 =====================
 
