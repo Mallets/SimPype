@@ -10,6 +10,7 @@ class Generator(simpype.Resource):
 		# Init
 		self.message.is_alive = False
 		self.random['arrival'] = {0: lambda: float("inf")}
+		self.random['quantity'] = {0: lambda: 1}
 		self.a_gen = self.env.process(self.h_gen())
 
 	def gen_message(self):
@@ -31,9 +32,10 @@ class Generator(simpype.Resource):
 				more = False
 			else:
 				yield self.env.timeout(val)
-				message = self.gen_message()
-				self.send(message)
-				self.counter = self.counter + 1
+				for i in range(0, self.random['quantity'].value):
+					message = self.gen_message()
+					self.send(message)
+					self.counter = self.counter + 1
 
 # Do NOT remove
 resource = lambda *args: Generator(*args)
