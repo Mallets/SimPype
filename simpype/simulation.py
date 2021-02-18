@@ -205,7 +205,7 @@ class Log:
 
 	@dir.setter
 	def dir(self, val):
-		self._dir = functools.reduce(os.path.join,[val, self.sim.id, str(self.date)])
+		self._dir = functools.reduce(os.path.join,[val, self.sim.id, self.date.strftime("%Y%m%d.%H%M%S.%f")])
 
 	def _write_log(self, timestamp):
 		assert isinstance(timestamp, simpype.message.Timestamp)
