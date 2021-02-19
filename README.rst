@@ -94,4 +94,4 @@ The built-in system produces the logs in a tidy format where each variable is sa
     ... 8.886733703,gen0,6,res0,pipe.out
     ... 8.949540209,gen0,6,res0,resource.serve
 
-This data format is well-suited for being directly processed by data manipulation tools like `pandas <http://pandas.pydata.org/>`_  or `dplyr <https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html>`_. SimPype does not provide any tools for parsing the data. 
+This data format is well-suited for being directly processed by data manipulation tools like `pandas <http://pandas.pydata.org/>`_  or `tidyverse <https://www.tidyverse.org/>`_. SimPype does not provide any tools for parsing the data. 
