@@ -1,13 +1,13 @@
 language: python
 python:
-  - "3.3"
-  - "3.4"
-  - "3.5"
   - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
 install: 
-  - pip install .
-  - pip install simpy
-  - pip install codecov
+  - pip3 install .
+  - pip3 install simpy
+  - pip3 install codecov
 script:
   - python3 examples/bank.py
   - python3 examples/boarding.py

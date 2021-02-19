@@ -2,7 +2,7 @@
 Installation
 ============
 
-SimPype is a simulation framework based on `SimPy (>=3.0.10) <http://simpy.readthedocs.io>`_ and runs on Python 3 (>=3.3) only.
+SimPype is a simulation framework based on `SimPy (>=4.0.1) <http://simpy.readthedocs.io>`_ and runs on Python 3 (>=3.6) only.
 So make sure you have a recent version of Python installed on your system.
 SimPype also supports PyPy for an easy distribution and installation. If you have `pip3 <http://pypi.python.org/pypi/pip>`_ installed, just type:
 
